@@ -1,0 +1,31 @@
+@use '../abstracts/' as *;
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &--menu {
+    --button-padding: 0.25rem;
+
+    background-color: transparent;
+    padding: var(--button-padding);
+    margin-inline-end: calc(var(--button-padding) * -1);
+
+    .icon {
+      &--close {
+        display: none;
+      }
+    }
+
+    &.active .icon {
+      &--hamburger {
+        display: none;
+      }
+
+      &--close {
+        display: block;
+      }
+    }
+  }
+}

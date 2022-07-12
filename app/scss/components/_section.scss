@@ -1,0 +1,13 @@
+@use '../abstracts/' as *;
+
+.section {
+  --section-padding-inline: 1.375rem;
+  --section-padding-block-end: 2.375rem;
+
+  position: relative;
+  background-color: var(--color-white-5);
+  border: var(--border-0);
+  border-radius: var(--radius-1);
+  padding-inline: var(--section-padding-inline);
+  padding-block-end: var(--section-padding-block-end);
+}
