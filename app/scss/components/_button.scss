@@ -1,18 +1,28 @@
 @use '../abstracts/' as *;
 
 .button {
+  --button-large-max-width: 13.375rem;
+  --button-large-height: 3.5rem;
+  --button-bookmark-width: var(--button-large-height);
+  --button-bookmark-height: var(--button-large-height);
+  --button-transition: var(--duration-2) ease;
+
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: var(--font-weight-5);
+  transition: var(--button-transition);
 
   &--menu {
-    --button-padding: 0.25rem;
-
     background-color: transparent;
-    padding: var(--button-padding);
-    margin-inline-end: calc(var(--button-padding) * -1);
 
     .icon {
+      --icon-width: 1.25rem;
+      --icon-height: var(--icon-width);
+
+      width: var(--icon-width);
+      height: var(--icon-height);
+
       &--close {
         display: none;
       }
@@ -26,6 +36,38 @@
       &--close {
         display: block;
       }
+    }
+  }
+
+  &--large {
+    @extend %button-cyan;
+    width: min(100%, var(--button-large-max-width));
+    height: var(--button-large-height);
+    border-radius: calc(var(--button-large-height) / 2);
+    padding-inline: rem(8);
+  }
+
+  &--bookmark {
+    flex-shrink: 0;
+    width: var(--button-bookmark-width);
+    height: var(--button-bookmark-height);
+    background-color: var(--color-white-8);
+    border-radius: 50%;
+    overflow: hidden;
+    transition-property: color;
+
+    circle {
+      transition: fill var(--button-transition);
+    }
+
+    &:is(:hover, :focus-visible) {
+      circle {
+        fill: var(--color-gray-5);
+      }
+    }
+
+    .button__text {
+      display: none;
     }
   }
 }

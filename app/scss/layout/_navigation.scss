@@ -1,11 +1,12 @@
 @use '../abstracts/' as *;
 
 .nav {
-  --nav-height: 1.25rem;
   --nav-max-width: 69.25rem;
+  // --nav-height: 1.25rem;
 
   width: min(100%, var(--nav-max-width));
-  height: var(--nav-height);
+  // height: var(--nav-height);
+  height: fit-content;
   display: flex;
   justify-content: space-between;
   align-items: center;

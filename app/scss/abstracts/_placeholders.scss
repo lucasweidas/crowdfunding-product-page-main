@@ -1,0 +1,13 @@
+@use 'breakpoints' as *;
+@use 'functions' as *;
+@use 'mixin' as *;
+
+%button-cyan {
+  background-color: var(--color-cyan-6);
+  color: var(--color-white-5);
+  transition-property: background-color;
+
+  &:is(:hover, :focus-visible) {
+    background-color: var(--color-cyan-8);
+  }
+}

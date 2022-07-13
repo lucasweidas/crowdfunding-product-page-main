@@ -1,13 +1,44 @@
 @use '../abstracts/' as *;
 
 .section {
+  $section: &;
+  --section-max-width: 45.75rem;
   --section-padding-inline: 1.375rem;
   --section-padding-block-end: 2.375rem;
 
+  width: min(100%, var(--section-max-width));
+  display: flex;
+  flex-direction: column;
   position: relative;
   background-color: var(--color-white-5);
   border: var(--border-0);
   border-radius: var(--radius-1);
   padding-inline: var(--section-padding-inline);
   padding-block-end: var(--section-padding-block-end);
+
+  &--intro {
+    --section-row-gap: 1.25rem;
+    --section-padding-block-start: 3.25rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    row-gap: var(--section-row-gap);
+    padding-block-start: var(--section-padding-block-start);
+    text-align: center;
+
+    #{$section}__logo {
+      width: max-content;
+      position: absolute;
+      top: -1.75rem;
+    }
+  }
+
+  &--stats {
+    --section-padding-block-start: 2.5rem;
+
+    align-items: center;
+    padding-block-start: var(--section-padding-block-start);
+    text-align: center;
+  }
 }

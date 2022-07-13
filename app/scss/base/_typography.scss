@@ -2,7 +2,7 @@
 
 :root {
   --font-commissioner: 'Commissioner', sans-serif;
-  --font-size-1: 1rem;
+  --font-size-1: 0.938rem;
   --font-size-2: 1.125rem;
   --font-size-3: 1.25rem;
   --font-size-4: 1.5rem;
@@ -11,9 +11,34 @@
   --font-weight-4: 400;
   --font-weight-5: 500;
   --font-weight-7: 700;
+
+  @include breakpoint(medium) {
+    --font-size-1: 1rem;
+    --font-size-2: 1.125rem;
+    --font-size-3: 1.25rem;
+    --font-size-4: 1.5rem;
+    --font-size-5: 2rem;
+    --font-size-6: 2.5rem;
+  }
 }
 
 body {
   font-family: var(--font-commissioner);
   font-size: var(--font-size-1);
+}
+
+.heading {
+  color: var(--color-black);
+
+  &--h1 {
+    max-width: 12rem;
+    font-size: var(--font-size-3);
+    font-weight: var(--font-weight-7);
+    line-height: 1.15;
+  }
+}
+
+.paragraph {
+  color: var(--color-gray-5);
+  line-height: 1.5;
 }

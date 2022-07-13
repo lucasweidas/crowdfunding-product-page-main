@@ -9,12 +9,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+      integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href="dist/css/main.css" />
     <script src="dist/js/main.js" defer></script>
   </head>
   <body>
     <!-- <img class="design" src="app/design/mobile-menu.jpg" alt=""> -->
-    <!-- <img class="design" src="app/design/mobile-design.jpg" alt=""> -->
+    <!-- <img class="design" src="app/design/mobile-design.jpg" alt="" /> -->
     <header class="header">
       <div class="container container--header">
         <nav class="nav">
@@ -80,10 +87,10 @@
           </div>
           <h1 class="heading heading--h1">Mastercraft Bamboo Monitor Riser</h1>
           <p class="paragraph">A beautiful & handcrafted monitor stand to reduce neck and eye strain.</p>
-          <div class="section__wrapper">
-            <button class="button">Back this project</button>
-            <button class="button button--bookmark">
-              <svg width="56" height="56" xmlns="http://www.w3.org/2000/svg">
+          <div class="section__wrapper wrapper wrapper--button">
+            <button class="button button--large">Back this project</button>
+            <button class="button button--bookmark" aria-pressed="false">
+              <svg width="56" height="56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <g fill="none" fill-rule="evenodd">
                   <circle fill="#2F2F2F" cx="28" cy="28" r="28" />
                   <path fill="#B1B1B1" d="M23 19v18l5-5.058L33 37V19z" />
@@ -96,9 +103,9 @@
         <!-- Section intro end -->
         <!-------------------------------------->
         <!-- Section stats start -->
-        <section class="section section-stats">
+        <section class="section section--stats">
           <h2 class="sr-only">Current project stats</h2>
-          <div class="section__wrapper">
+          <div class="section__wrapper wrapper--column">
             <div class="stats stats--column">
               <span class="stats__number">$89,914</span>
               <span>of $100,000 backed</span>
