@@ -15,7 +15,7 @@
   &__menu {
     $menu: '.menu';
     --menu-max-width: 30rem;
-    --menu-animation: 250ms ease-in-out forwards;
+    --menu-animation: 200ms ease-in-out forwards;
     --menu-translate: translateY(-8%);
 
     width: min(100%, var(--menu-max-width));

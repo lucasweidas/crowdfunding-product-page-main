@@ -64,6 +64,7 @@
     overflow: hidden;
     transition-property: color;
 
+    path,
     circle {
       transition: fill var(--button-transition);
     }
@@ -75,7 +76,25 @@
     }
 
     .button__text {
-      display: none;
+      transition: color var(--button-transition);
+
+      @include breakpoint-down(medium) {
+        display: none;
+      }
+    }
+
+    html[data-bookmark='true'] & {
+      path {
+        fill: var(--color-white-5);
+      }
+
+      circle {
+        fill: var(--color-cyan-8);
+      }
+
+      .button__text {
+        color: var(--color-cyan-8);
+      }
     }
   }
 

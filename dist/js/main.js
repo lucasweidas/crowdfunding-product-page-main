@@ -1,13 +1,22 @@
 const header = document.querySelector('[data-header]');
-const toggleMenu = document.querySelector('[data-toggle-menu]');
+const main = document.querySelector('[data-main]');
 
 header.addEventListener('click', checkHeaderClick);
+main.addEventListener('click', checkMainClick);
 
 function checkHeaderClick(evt) {
   const target = evt.target;
 
   if (target.matches('[data-toggle-menu]')) {
     return mobileMenu(target);
+  }
+}
+
+function checkMainClick(evt) {
+  const target = evt.target;
+
+  if (target.matches('[data-button-bookmark]')) {
+    return toggleBookmark();
   }
 }
 
@@ -32,5 +41,27 @@ function mobileMenu(button) {
 
 function toggleActiveClass(elements) {
   elements.forEach(element => element.classList.toggle('active'));
+}
+
+function toggleBookmark() {
+  const isBookmarked = JSON.parse(localStorage.getItem('bookmark'));
+  const html = document.documentElement;
+
+  localStorage.setItem('bookmark', !isBookmarked);
+  html.dataset.bookmark = !isBookmarked;
+  setToggleBookmarkAttributes();
+}
+
+setToggleBookmarkAttributes();
+function setToggleBookmarkAttributes() {
+  const isBookmarked = JSON.parse(localStorage.getItem('bookmark'));
+  const button = document.querySelector('[data-button-bookmark]');
+
+  button.setAttribute('aria-pressed', isBookmarked);
+  if (isBookmarked) {
+    button.setAttribute('aria-label', 'Remove bookmark');
+  } else {
+    button.setAttribute('aria-label', 'Add bookmark');
+  }
 }
 //# sourceMappingURL=main.js.map

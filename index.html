@@ -17,7 +17,15 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="dist/css/main.css" />
-    <script src="dist/js/main.js" type="module"></script>
+    <script>
+      if (!localStorage.getItem('bookmark')) {
+        localStorage.setItem('bookmark', false);
+      }
+      const html = document.documentElement;
+      const isBookmarked = localStorage.getItem('bookmark');
+      html.setAttribute('data-bookmark', isBookmarked);
+    </script>
+    <script src="dist/js/main.js" defer></script>
   </head>
   <body>
     <!-- <img class="design" src="app/design/mobile-menu.jpg" alt=""> -->
@@ -36,7 +44,15 @@
               </svg>
             </a>
           </div>
-          <button class="button--menu" data-toggle-menu aria-label="Navigation Menu" aria-controls="nav-menu" aria-haspopup="menu" aria-expanded="false" aria-pressed="false">
+          <button
+            class="button--menu"
+            data-toggle-menu
+            aria-label="Navigation Menu"
+            aria-controls="nav-menu"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-pressed="false"
+          >
             <svg class="icon--hamburger" viewBox="0 0 16 15" width="16" height="15" xmlns="http://www.w3.org/2000/svg">
               <g fill="#FFF" fill-rule="evenodd"><path d="M0 0h16v3H0zM0 6h16v3H0zM0 12h16v3H0z" /></g>
             </svg>
@@ -64,7 +80,7 @@
       </div>
     </header>
 
-    <main class="main">
+    <main class="main" data-main>
       <div class="container--main">
         <!-- Section intro start -->
         <section class="section--intro">
@@ -89,14 +105,14 @@
           <p class="paragraph">A beautiful & handcrafted monitor stand to reduce neck and eye strain.</p>
           <div class="wrapper--button">
             <button class="button--large">Back this project</button>
-            <button class="button--bookmark" aria-pressed="false">
+            <button class="button--bookmark" data-button-bookmark aria-pressed="false" aria-label="Add Bookmark">
               <svg width="56" height="56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <g fill="none" fill-rule="evenodd">
                   <circle fill="#2F2F2F" cx="28" cy="28" r="28" />
                   <path fill="#B1B1B1" d="M23 19v18l5-5.058L33 37V19z" />
                 </g>
               </svg>
-              <span class="button__text">Bookmark</span>
+              <span class="button__text" aria-hidden="true">Bookmark</span>
             </button>
           </div>
         </section>
