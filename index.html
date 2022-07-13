@@ -17,12 +17,12 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="dist/css/main.css" />
-    <script src="dist/js/main.js" defer></script>
+    <script src="dist/js/main.js" type="module"></script>
   </head>
   <body>
     <!-- <img class="design" src="app/design/mobile-menu.jpg" alt=""> -->
-    <img class="design" src="app/design/mobile-design.jpg" alt="" />
-    <header class="header">
+    <!-- <img class="design" src="app/design/mobile-design.jpg" alt="" /> -->
+    <header class="header" data-header>
       <div class="container--header">
         <nav class="nav">
           <div class="nav__logo">
@@ -36,7 +36,7 @@
               </svg>
             </a>
           </div>
-          <button class="button--menu" aria-label="Navigation Menu" aria-controls="nav-menu" aria-haspopup="menu" aria-expanded="false" aria-pressed="false">
+          <button class="button--menu" data-toggle-menu aria-label="Navigation Menu" aria-controls="nav-menu" aria-haspopup="menu" aria-expanded="false" aria-pressed="false">
             <svg class="icon--hamburger" viewBox="0 0 16 15" width="16" height="15" xmlns="http://www.w3.org/2000/svg">
               <g fill="#FFF" fill-rule="evenodd"><path d="M0 0h16v3H0zM0 6h16v3H0zM0 12h16v3H0z" /></g>
             </svg>
@@ -47,7 +47,7 @@
               </g>
             </svg>
           </button>
-          <div class="nav__menu" id="nav-menu">
+          <div class="nav__menu" id="nav-menu" data-nav-menu>
             <ul class="menu__list">
               <li class="menu__item">
                 <a href="#about" class="menu__link">About</a>

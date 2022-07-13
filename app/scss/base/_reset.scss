@@ -55,6 +55,12 @@ svg {
   display: block;
 }
 
+/* Removing svg pointer-events to prevent some issues with event listener */
+svg,
+svg * {
+  pointer-events: none;
+}
+
 /* Inherit fonts for inputs and buttons */
 input,
 button,

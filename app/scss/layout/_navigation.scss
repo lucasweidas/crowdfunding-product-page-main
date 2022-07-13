@@ -15,14 +15,50 @@
   &__menu {
     $menu: '.menu';
     --menu-max-width: 30rem;
+    --menu-animation: 250ms ease-in-out forwards;
+    --menu-translate: translateY(-8%);
 
     width: min(100%, var(--menu-max-width));
     position: absolute;
     top: calc(100% + rem(36));
     right: 0;
+    z-index: 100;
     visibility: hidden;
+    opacity: 0;
     background-color: var(--color-white-5);
     border-radius: var(--radius-1);
+
+    &.active {
+      animation: show var(--menu-animation);
+
+      @keyframes show {
+        0% {
+          transform: var(--menu-translate);
+        }
+        100% {
+          visibility: visible;
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    }
+
+    &.closing {
+      animation: close var(--menu-animation);
+
+      @keyframes close {
+        0% {
+          visibility: visible;
+          opacity: 1;
+          transform: translateY(0);
+        }
+        100% {
+          visibility: hidden;
+          opacity: 0;
+          transform: var(--menu-translate);
+        }
+      }
+    }
 
     #{$menu}__list {
       display: flex;
