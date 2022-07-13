@@ -4,6 +4,7 @@
 
 %button-cyan {
   background-color: var(--color-cyan-6);
+  border-radius: var(--button-radius);
   color: var(--color-white-5);
   transition-property: background-color;
 

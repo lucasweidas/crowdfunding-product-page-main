@@ -1,0 +1,26 @@
+@use '../abstracts/' as *;
+
+.wrapper {
+  width: 100%;
+  display: flex;
+
+  &--button {
+    @extend .wrapper;
+    justify-content: space-between;
+    column-gap: rem(8);
+  }
+
+  &--label {
+    @extend .wrapper;
+    flex-direction: column;
+    row-gap: rem(10);
+    margin-block-end: rem(24);
+  }
+
+  &--select {
+    @extend .wrapper;
+    flex-direction: column;
+    row-gap: rem(26);
+    padding-block-start: rem(4);
+  }
+}

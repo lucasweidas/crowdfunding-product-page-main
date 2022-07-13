@@ -1,0 +1,31 @@
+@use '../abstracts/' as *;
+
+.container {
+  --container-padding-inline: 1.5rem;
+
+  display: flex;
+  padding-inline: var(--container-padding-inline);
+
+  &--header {
+    --container-height: 18.75rem;
+    --container-padding-block-start: 2rem;
+    @extend .container;
+
+    justify-content: center;
+    height: var(--container-height);
+    background: url('../images/image-hero-mobile.jpg') center / cover no-repeat;
+    padding-block-start: var(--container-padding-block-start);
+  }
+
+  &--main {
+    --container-row-gap: 1.5rem;
+    --container-top: -3.5rem;
+    @extend .container;
+
+    flex-direction: column;
+    align-items: center;
+    row-gap: var(--container-row-gap);
+    position: relative;
+    top: var(--container-top);
+  }
+}

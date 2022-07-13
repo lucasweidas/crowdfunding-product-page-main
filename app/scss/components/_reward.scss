@@ -1,0 +1,34 @@
+@use '../abstracts/' as *;
+
+.reward {
+  margin-block-start: rem(10);
+
+  &__list {
+    display: grid;
+    row-gap: rem(24);
+  }
+
+  &__item {
+    &.disabled {
+      opacity: 0.5;
+
+      .button--select {
+        background-color: var(--color-gray-5);
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &__wrapper {
+    --wrapper-padding: 1.5rem;
+
+    border: var(--border-1);
+    border-radius: var(--radius-1);
+    padding: var(--wrapper-padding);
+  }
+
+  &__values {
+    font-weight: var(--font-weight-5);
+    color: var(--color-cyan-6);
+  }
+}

@@ -1,10 +1,7 @@
 @use '../abstracts/' as *;
 
 .button {
-  --button-large-max-width: 13.375rem;
-  --button-large-height: 3.5rem;
-  --button-bookmark-width: var(--button-large-height);
-  --button-bookmark-height: var(--button-large-height);
+  --button-radius: calc(var(--button-height) / 2);
   --button-transition: var(--duration-2) ease;
 
   display: flex;
@@ -14,6 +11,7 @@
   transition: var(--button-transition);
 
   &--menu {
+    @extend .button;
     background-color: transparent;
 
     .icon {
@@ -23,7 +21,12 @@
       width: var(--icon-width);
       height: var(--icon-height);
 
+      &--hamburger {
+        @extend .icon;
+      }
+
       &--close {
+        @extend .icon;
         display: none;
       }
     }
@@ -40,17 +43,22 @@
   }
 
   &--large {
+    --button-width: 13.375rem;
+    --button-height: 3.5rem;
+    @extend .button;
     @extend %button-cyan;
-    width: min(100%, var(--button-large-max-width));
-    height: var(--button-large-height);
-    border-radius: calc(var(--button-large-height) / 2);
+    width: min(100%, var(--button-width));
+    height: var(--button-height);
     padding-inline: rem(8);
   }
 
   &--bookmark {
+    --button-width: 3.5rem;
+    --button-height: var(--button-width);
+    @extend .button;
+    width: var(--button-width);
+    height: var(--button-height);
     flex-shrink: 0;
-    width: var(--button-bookmark-width);
-    height: var(--button-bookmark-height);
     background-color: var(--color-white-8);
     border-radius: 50%;
     overflow: hidden;
@@ -69,5 +77,14 @@
     .button__text {
       display: none;
     }
+  }
+
+  &--select {
+    --button-width: 9.75rem;
+    --button-height: 3rem;
+    @extend .button;
+    @extend %button-cyan;
+    width: min(100%, var(--button-width));
+    height: var(--button-height);
   }
 }
