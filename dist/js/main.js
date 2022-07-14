@@ -1,17 +1,22 @@
 const header = document.querySelector('[data-header]');
 const main = document.querySelector('[data-main]');
+const selectionModal = document.querySelector('[data-modal-selection]');
+const form = document.querySelector('[data-form]');
 
 header.addEventListener('click', checkHeaderClick);
 main.addEventListener('click', checkMainClick);
+form.addEventListener('submit', evt => {
+  evt.preventDefault();
+});
 
 function checkHeaderClick(evt) {
   const target = evt.target;
 
   if (target.matches('[data-toggle-menu]')) {
-    return mobileMenu();
+    return toggleMobileMenu();
   }
   if (target.matches('[data-overlay]')) {
-    return mobileMenu();
+    return toggleMobileMenu();
   }
 }
 
@@ -21,9 +26,15 @@ function checkMainClick(evt) {
   if (target.matches('[data-button-bookmark]')) {
     return toggleBookmark();
   }
+  if (target.matches('[data-cto-selection]')) {
+    return openSelectionModal();
+  }
+  if (target.matches('[data-close-selection]')) {
+    return closeSelectionModal();
+  }
 }
 
-function mobileMenu() {
+function toggleMobileMenu() {
   const nav = document.querySelector('[data-nav]');
   const button = document.querySelector('[data-toggle-menu]');
 
@@ -67,5 +78,13 @@ function setToggleBookmarkAttributes() {
   } else {
     button.setAttribute('aria-label', 'Add bookmark');
   }
+}
+
+function openSelectionModal() {
+  toggleActiveClass([selectionModal]);
+}
+
+function closeSelectionModal() {
+  toggleActiveClass([selectionModal]);
 }
 //# sourceMappingURL=main.js.map

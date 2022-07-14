@@ -105,7 +105,7 @@
           <h1 class="heading--h1">Mastercraft Bamboo Monitor Riser</h1>
           <p class="paragraph">A beautiful & handcrafted monitor stand to reduce neck and eye strain.</p>
           <div class="wrapper--button">
-            <button class="button--large">Back this project</button>
+            <button class="button--large" data-cto-selection>Back this project</button>
             <button class="button--bookmark" data-button-bookmark aria-pressed="false" aria-label="Add Bookmark">
               <svg width="56" height="56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <g fill="none" fill-rule="evenodd">
@@ -218,9 +218,9 @@
         <!-- Section reward end -->
         <!-------------------------------------->
         <!-- Selection modal start -->
-        <dialog class="modal--selection">
-          <section class="section">
-            <button class="button--close">
+        <div class="modal--selection container--modal" data-modal-selection>
+          <section class="section--modal">
+            <button class="button--close" data-close-selection>
               <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M11.314 0l2.828 2.828L9.9 7.071l4.243 4.243-2.828 2.828L7.07 9.9l-4.243 4.243L0 11.314 4.242 7.07 0 2.828 2.828 0l4.243 4.242L11.314 0z"
@@ -232,7 +232,7 @@
             </button>
             <h2 class="heading--h2">Back this project</h2>
             <p class="paragraph">Want to support us in bringing Mastercraft Bamboo Monitor Riser out in the world?</p>
-            <form action="./" class="form">
+            <form class="form" data-form action="./">
               <div class="reward">
                 <ol class="reward__list">
                   <li class="reward__item">
@@ -241,9 +241,9 @@
                         <input type="radio" name="form-radio" id="form-radio-0" />
                       </div>
                       <div class="wrapper">
-                        <div class="wrapper--label">
-                          <label class="heading--h3" for="form-radio-0">Pledge with no reward</label>
-                        </div>
+                        <label class="wrapper--label" for="form-radio-0">
+                          <span class="heading--h3">Pledge with no reward</span>
+                        </label>
                       </div>
                       <p class="paragraph">
                         Choose to support us without a reward if you simply believe in our project. As a backer, you will be signed up to receive product
@@ -264,10 +264,10 @@
                         <input type="radio" name="form-radio" id="form-radio-1" />
                       </div>
                       <div class="wrapper">
-                        <div class="wrapper--label">
-                          <label class="heading--h3" for="form-radio-1">Bamboo Stand</label>
+                        <label class="wrapper--label" for="form-radio-1">
+                          <span class="heading--h3">Bamboo Stand</span>
                           <span class="reward__values">Pledge $25 or more</span>
-                        </div>
+                        </label>
                         <div class="stats">
                           <span class="stats__number">101</span>
                           <span>left</span>
@@ -292,10 +292,10 @@
                         <input type="radio" name="form-radio" id="form-radio-2" />
                       </div>
                       <div class="wrapper">
-                        <div class="wrapper--label">
-                          <label class="heading--h3" for="form-radio-2">Black Edition Stand</label>
+                        <label class="wrapper--label" for="form-radio-2">
+                          <span class="heading--h3">Black Edition Stand</span>
                           <span class="reward__values">Pledge $75 or more</span>
-                        </div>
+                        </label>
                         <div class="stats">
                           <span class="stats__number">64</span>
                           <span>left</span>
@@ -320,10 +320,10 @@
                         <input type="radio" name="form-radio" id="form-radio-3" />
                       </div>
                       <div class="wrapper">
-                        <div class="wrapper--label">
-                          <label class="heading--h3" for="form-radio-3">Mahogany Special Edition</label>
+                        <label class="wrapper--label" for="form-radio-3">
+                          <span class="heading--h3">Mahogany Special Edition</span>
                           <span class="reward__values">Pledge $200 or more</span>
-                        </div>
+                        </label>
                         <div class="stats">
                           <span class="stats__number">0</span>
                           <span>left</span>
@@ -346,11 +346,11 @@
               </div>
             </form>
           </section>
-        </dialog>
+        </div>
         <!-- Selection modal end -->
         <!-------------------------------------->
         <!-- Success modal start -->
-        <dialog class="modal--success">
+        <div class="modal--success">
           <section class="section">
             <div class="modal__icon">
               <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
@@ -366,7 +366,7 @@
             </p>
             <button class="button--understood">Got it!</button>
           </section>
-        </dialog>
+        </div>
         <!-- Success modal end -->
       </div>
     </main>

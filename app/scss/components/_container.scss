@@ -28,4 +28,10 @@
     position: relative;
     top: var(--container-top);
   }
+
+  &--modal {
+    @extend .container;
+    justify-content: center;
+    align-items: center;
+  }
 }

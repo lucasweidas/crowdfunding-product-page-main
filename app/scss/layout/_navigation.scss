@@ -3,7 +3,6 @@
 .nav {
   $nav: &;
   --nav-max-width: 69.25rem;
-  --animation-2: 200ms ease-in-out forwards;
   // --nav-height: 1.25rem;
 
   width: min(100%, var(--nav-max-width));
@@ -82,7 +81,7 @@
       padding-inline-start: var(--link-padding-inline-start);
       font-size: var(--font-size-2);
       font-weight: var(--font-weight-5);
-      color: var(--color-black);
+      color: var(--color-black-5);
     }
   }
 
@@ -95,11 +94,11 @@
     z-index: -1;
     visibility: hidden;
     opacity: 0;
-    background-color: rgba(hsl(0, 0%, 0%), 0.5);
-  
+    background-color: var(--color-black-2);
+
     #{$nav}.active & {
       animation: show-overlay var(--animation-2);
-  
+
       @keyframes show-overlay {
         100% {
           visibility: visible;
@@ -107,10 +106,10 @@
         }
       }
     }
-  
+
     #{$nav}.closing & {
       animation: close-overlay var(--animation-2);
-  
+
       @keyframes close-overlay {
         0% {
           visibility: visible;
