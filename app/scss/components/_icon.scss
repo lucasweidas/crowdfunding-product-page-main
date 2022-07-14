@@ -1,0 +1,33 @@
+@use '../abstracts/' as *;
+
+.icon {
+  $nav-active: '.nav.active';
+  --icon-width: 1.25rem;
+  --icon-height: var(--icon-width);
+
+  width: var(--icon-width);
+  height: var(--icon-height);
+
+  &--hamburger {
+    @extend .icon;
+
+    #{$nav-active} & {
+      display: none;
+    }
+  }
+
+  &--close-1 {
+    @extend .icon;
+    display: none;
+
+    #{$nav-active} & {
+      display: block;
+    }
+  }
+
+  &--close-2 {
+    @extend .icon;
+    --icon-width: 1.125rem;
+    --icon-height: var(--icon-width);
+  }
+}

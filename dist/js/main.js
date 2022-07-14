@@ -12,24 +12,27 @@ form.addEventListener('submit', evt => {
 function checkHeaderClick(evt) {
   const target = evt.target;
 
-  if (target.matches('[data-toggle-menu]')) {
+  if (target.hasAttribute('data-toggle-menu') || target.hasAttribute('data-overlay')) {
     return toggleMobileMenu();
   }
-  if (target.matches('[data-overlay]')) {
-    return toggleMobileMenu();
-  }
+  // if (target.hasAttribute('data-overlay')) {
+  //   return toggleMobileMenu();
+  // }
 }
 
 function checkMainClick(evt) {
   const target = evt.target;
 
-  if (target.matches('[data-button-bookmark]')) {
+  if (target.hasAttribute('data-button-bookmark')) {
     return toggleBookmark();
   }
-  if (target.matches('[data-cto-selection]')) {
+  if (target.hasAttribute('data-cto-selection')) {
     return openSelectionModal();
   }
-  if (target.matches('[data-close-selection]')) {
+  if (target.hasAttribute('data-close-selection')) {
+    return closeSelectionModal();
+  }
+  if (target.hasAttribute('data-modal-selection')) {
     return closeSelectionModal();
   }
 }
@@ -38,24 +41,23 @@ function toggleMobileMenu() {
   const nav = document.querySelector('[data-nav]');
   const button = document.querySelector('[data-toggle-menu]');
 
-  toggleActiveClass([nav]);
+  toggleActiveClass(nav);
   const isActive = nav.classList.contains('active');
 
   button.setAttribute('aria-expanded', isActive);
   button.setAttribute('aria-pressed', isActive);
   if (isActive) return;
   nav.classList.add('closing');
-  nav.addEventListener(
-    'animationend',
-    evt => {
-      evt.animationName === 'close-menu' && nav.classList.remove('closing');
-    },
-    { once: true }
-  );
+  nav.addEventListener('animationend', toggleClosingClass);
 }
 
-function toggleActiveClass(elements) {
-  elements.forEach(element => element.classList.toggle('active'));
+function toggleActiveClass(element) {
+  element.classList.toggle('active');
+}
+
+function toggleClosingClass() {
+  this.classList.toggle('closing');
+  this.removeEventListener('animationend', toggleClosingClass);
 }
 
 function toggleBookmark() {
@@ -81,10 +83,12 @@ function setToggleBookmarkAttributes() {
 }
 
 function openSelectionModal() {
-  toggleActiveClass([selectionModal]);
+  toggleActiveClass(selectionModal);
 }
 
 function closeSelectionModal() {
-  toggleActiveClass([selectionModal]);
+  toggleActiveClass(selectionModal);
+  selectionModal.classList.add('closing');
+  selectionModal.addEventListener('animationend', toggleClosingClass);
 }
 //# sourceMappingURL=main.js.map

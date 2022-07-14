@@ -8,19 +8,17 @@
   position: fixed;
   top: 0;
   left: 0;
+  z-index: var(--modal-z-index);
   visibility: hidden;
   opacity: 0;
   background-color: var(--color-black-2);
 
   &.active {
-    animation: show-modal var(--animation-2);
+    @include animation-show();
+  }
 
-    @keyframes show-modal {
-      100% {
-        visibility: visible;
-        opacity: 1;
-      }
-    }
+  &.closing {
+    @include animation-close();
   }
 
   &--selection {

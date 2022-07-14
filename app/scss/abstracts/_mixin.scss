@@ -11,3 +11,29 @@
     @content;
   }
 }
+
+@mixin animation-show() {
+  animation: show var(--animation-2);
+
+  @keyframes show {
+    100% {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+@mixin animation-close() {
+  animation: close var(--animation-2);
+
+  @keyframes close {
+    0% {
+      visibility: visible;
+      opacity: 1;
+    }
+    100% {
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+}

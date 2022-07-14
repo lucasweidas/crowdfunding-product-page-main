@@ -12,7 +12,7 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
-  z-index: 100;
+  z-index: var(--nav-z-index);
 
   &__menu {
     $menu: '.menu';
@@ -97,29 +97,11 @@
     background-color: var(--color-black-2);
 
     #{$nav}.active & {
-      animation: show-overlay var(--animation-2);
-
-      @keyframes show-overlay {
-        100% {
-          visibility: visible;
-          opacity: 1;
-        }
-      }
+      @include animation-show();
     }
 
     #{$nav}.closing & {
-      animation: close-overlay var(--animation-2);
-
-      @keyframes close-overlay {
-        0% {
-          visibility: visible;
-          opacity: 1;
-        }
-        100% {
-          visibility: hidden;
-          opacity: 0;
-        }
-      }
+      @include animation-close();
     }
   }
 }

@@ -56,7 +56,7 @@
             <svg class="icon--hamburger" viewBox="0 0 16 15" width="16" height="15" xmlns="http://www.w3.org/2000/svg">
               <g fill="#FFF" fill-rule="evenodd"><path d="M0 0h16v3H0zM0 6h16v3H0zM0 12h16v3H0z" /></g>
             </svg>
-            <svg class="icon--close" viewBox="0 0 14 15" width="14" height="15" xmlns="http://www.w3.org/2000/svg">
+            <svg class="icon--close-1" viewBox="0 0 14 15" width="14" height="15" xmlns="http://www.w3.org/2000/svg">
               <g fill="#FFF" fill-rule="evenodd">
                 <path d="M2.404.782l11.314 11.314-2.122 2.122L.282 2.904z" />
                 <path d="M.282 12.096L11.596.782l2.122 2.122L2.404 14.218z" />
@@ -218,33 +218,34 @@
         <!-- Section reward end -->
         <!-------------------------------------->
         <!-- Selection modal start -->
-        <div class="modal--selection container--modal" data-modal-selection>
+        <div class="modal--selection container--modal active" data-modal-selection>
           <section class="section--modal">
-            <button class="button--close" data-close-selection>
-              <svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M11.314 0l2.828 2.828L9.9 7.071l4.243 4.243-2.828 2.828L7.07 9.9l-4.243 4.243L0 11.314 4.242 7.07 0 2.828 2.828 0l4.243 4.242L11.314 0z"
-                  fill="#000"
-                  fill-rule="evenodd"
-                  opacity=".4"
-                />
-              </svg>
-            </button>
-            <h2 class="heading--h2">Back this project</h2>
+            <div class="wrapper--h-b">
+              <h2 class="heading--h2">Back this project</h2>
+              <button class="button--close" data-close-selection aria-label="Close modal">
+                <svg class="icon--close-2" viewBox="0 0 15 15" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M11.314 0l2.828 2.828L9.9 7.071l4.243 4.243-2.828 2.828L7.07 9.9l-4.243 4.243L0 11.314 4.242 7.07 0 2.828 2.828 0l4.243 4.242L11.314 0z"
+                    fill="#000"
+                    fill-rule="evenodd"
+                    opacity=".4"
+                  />
+                </svg>
+              </button>
+            </div>
             <p class="paragraph">Want to support us in bringing Mastercraft Bamboo Monitor Riser out in the world?</p>
             <form class="form" data-form action="./">
               <div class="reward">
                 <ol class="reward__list">
                   <li class="reward__item">
                     <div class="reward__wrapper">
-                      <div class="reward__input">
-                        <input type="radio" name="form-radio" id="form-radio-0" />
-                      </div>
-                      <div class="wrapper">
-                        <label class="wrapper--label" for="form-radio-0">
+                      <label class="wrapper--input">
+                        <input class="input--radio" type="radio" name="form-radio" id="form-radio-0" />
+                        <span class="custom--radio" aria-hidden="true"></span>
+                        <div class="wrapper--label">
                           <span class="heading--h3">Pledge with no reward</span>
-                        </label>
-                      </div>
+                        </div>
+                      </label>
                       <p class="paragraph">
                         Choose to support us without a reward if you simply believe in our project. As a backer, you will be signed up to receive product
                         updates via email.
@@ -260,27 +261,26 @@
                   </li>
                   <li class="reward__item">
                     <div class="reward__wrapper">
-                      <div class="reward__input">
-                        <input type="radio" name="form-radio" id="form-radio-1" />
-                      </div>
-                      <div class="wrapper">
-                        <label class="wrapper--label" for="form-radio-1">
+                      <label class="wrapper--input">
+                        <input class="input--radio" type="radio" name="form-radio" id="form-radio-1" />
+                        <span class="custom--radio" aria-hidden="true"></span>
+                        <div class="wrapper--label">
                           <span class="heading--h3">Bamboo Stand</span>
                           <span class="reward__values">Pledge $25 or more</span>
-                        </label>
-                        <div class="stats">
-                          <span class="stats__number">101</span>
-                          <span>left</span>
                         </div>
+                      </label>
+                      <div class="stats--day">
+                        <span class="stats__number">101</span>
+                        <span class="stats__text">left</span>
                       </div>
                       <p class="paragraph">
                         You get an ergonomic stand made of natural bamboo. You've helped us launch our promotional campaign, and you’ll be added to a special
                         Backer member list.
                       </p>
                       <div class="wrapper--enter">
-                        <label for="form-number-0">Enter your pledge</label>
+                        <label for="form-number-1">Enter your pledge</label>
                         <div class="wrapper">
-                          <input type="number" name="form-number" id="form-number-0" />
+                          <input type="number" name="form-number" id="form-number-1" />
                           <button class="button">Continue</button>
                         </div>
                       </div>
@@ -288,27 +288,26 @@
                   </li>
                   <li class="reward__item">
                     <div class="reward__wrapper">
-                      <div class="reward__input">
-                        <input type="radio" name="form-radio" id="form-radio-2" />
-                      </div>
-                      <div class="wrapper">
-                        <label class="wrapper--label" for="form-radio-2">
+                      <label class="wrapper--input">
+                        <input class="input--radio" type="radio" name="form-radio" id="form-radio-2" />
+                        <span class="custom--radio" aria-hidden="true"></span>
+                        <div class="wrapper--label">
                           <span class="heading--h3">Black Edition Stand</span>
                           <span class="reward__values">Pledge $75 or more</span>
-                        </label>
-                        <div class="stats">
-                          <span class="stats__number">64</span>
-                          <span>left</span>
                         </div>
+                      </label>
+                      <div class="stats--day">
+                        <span class="stats__number">64</span>
+                        <span class="stats__text">left</span>
                       </div>
                       <p class="paragraph">
                         You get a Black Special Edition computer stand and a personal thank you. You’ll be added to our Backer member list. Shipping is
                         included.
                       </p>
                       <div class="wrapper--enter">
-                        <label for="form-number-0">Enter your pledge</label>
+                        <label for="form-number-2">Enter your pledge</label>
                         <div class="wrapper">
-                          <input type="number" name="form-number" id="form-number-0" />
+                          <input type="number" name="form-number" id="form-number-2" />
                           <button class="button">Continue</button>
                         </div>
                       </div>
@@ -316,27 +315,26 @@
                   </li>
                   <li class="reward__item">
                     <div class="reward__wrapper">
-                      <div class="reward__input">
-                        <input type="radio" name="form-radio" id="form-radio-3" />
-                      </div>
-                      <div class="wrapper">
-                        <label class="wrapper--label" for="form-radio-3">
+                      <label class="wrapper--input">
+                        <input class="input--radio" type="radio" name="form-radio" id="form-radio-3" />
+                        <span class="custom--radio" aria-hidden="true"></span>
+                        <div class="wrapper--label">
                           <span class="heading--h3">Mahogany Special Edition</span>
                           <span class="reward__values">Pledge $200 or more</span>
-                        </label>
-                        <div class="stats">
-                          <span class="stats__number">0</span>
-                          <span>left</span>
                         </div>
+                      </label>
+                      <div class="stats--day">
+                        <span class="stats__number">0</span>
+                        <span class="stats__text">left</span>
                       </div>
                       <p class="paragraph">
                         You get two Special Edition Mahogany stands, a Backer T-Shirt, and a personal thank you. You’ll be added to our Backer member list.
                         Shipping is included.
                       </p>
                       <div class="wrapper--enter">
-                        <label for="form-number-0">Enter your pledge</label>
+                        <label for="form-number-3">Enter your pledge</label>
                         <div class="wrapper">
-                          <input type="number" name="form-number" id="form-number-0" />
+                          <input type="number" name="form-number" id="form-number-3" />
                           <button class="button">Continue</button>
                         </div>
                       </div>

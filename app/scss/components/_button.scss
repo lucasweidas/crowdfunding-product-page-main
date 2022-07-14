@@ -14,33 +14,6 @@
   &--menu {
     @extend .button;
     background-color: transparent;
-
-    .icon {
-      --icon-width: 1.25rem;
-      --icon-height: var(--icon-width);
-
-      width: var(--icon-width);
-      height: var(--icon-height);
-
-      &--hamburger {
-        @extend .icon;
-      }
-
-      &--close {
-        @extend .icon;
-        display: none;
-      }
-
-      #{$nav}.active & {
-        &--hamburger {
-          display: none;
-        }
-
-        &--close {
-          display: block;
-        }
-      }
-    }
   }
 
   &--large {
@@ -106,5 +79,20 @@
     @extend %button-cyan;
     width: min(100%, var(--button-width));
     height: var(--button-height);
+  }
+
+  &--close {
+    @extend .button;
+    width: fit-content;
+    height: fit-content;
+    background-color: transparent;
+
+    path {
+      transition: opacity var(--button-transition);
+    }
+    
+    &:hover path {
+      opacity: 1;
+    }
   }
 }

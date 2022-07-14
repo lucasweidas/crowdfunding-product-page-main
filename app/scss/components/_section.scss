@@ -63,16 +63,32 @@
   }
 
   &--reward {
-    --section-padding-block-start: 2.625rem;
     @extend .section;
+    --section-padding-block-start: 2.625rem;
 
     padding-block-start: var(--section-padding-block-start);
   }
 
   &--modal {
     @extend .section;
+    $modal: '.modal--selection';
+    --section-padding-block-start: 2.25rem;
+
     height: 100%;
     overflow-y: auto;
-    border: 0;
+    padding-block-start: var(--section-padding-block-start);
+
+    #{$modal}.active & {
+      animation: slide-down var(--animation-2);
+
+      @keyframes slide-down {
+        0% {
+          transform: translateY(-8%);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+    }
   }
 }
