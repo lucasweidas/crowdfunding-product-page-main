@@ -8,7 +8,10 @@ function checkHeaderClick(evt) {
   const target = evt.target;
 
   if (target.matches('[data-toggle-menu]')) {
-    return mobileMenu(target);
+    return mobileMenu();
+  }
+  if (target.matches('[data-overlay]')) {
+    return mobileMenu();
   }
 }
 
@@ -20,23 +23,24 @@ function checkMainClick(evt) {
   }
 }
 
-function mobileMenu(button) {
-  const menu = document.querySelector('[data-nav-menu]');
+function mobileMenu() {
+  const nav = document.querySelector('[data-nav]');
+  const button = document.querySelector('[data-toggle-menu]');
 
-  toggleActiveClass([menu, button]);
-  const isActive = menu.classList.contains('active');
+  toggleActiveClass([nav]);
+  const isActive = nav.classList.contains('active');
+
   button.setAttribute('aria-expanded', isActive);
   button.setAttribute('aria-pressed', isActive);
-  if (!isActive) {
-    menu.classList.add('closing');
-    menu.addEventListener(
-      'animationend',
-      () => {
-        menu.classList.remove('closing');
-      },
-      { once: true }
-    );
-  }
+  if (isActive) return;
+  nav.classList.add('closing');
+  nav.addEventListener(
+    'animationend',
+    evt => {
+      evt.animationName === 'close-menu' && nav.classList.remove('closing');
+    },
+    { once: true }
+  );
 }
 
 function toggleActiveClass(elements) {
@@ -44,11 +48,11 @@ function toggleActiveClass(elements) {
 }
 
 function toggleBookmark() {
-  const isBookmarked = JSON.parse(localStorage.getItem('bookmark'));
+  const isBookmarked = !JSON.parse(localStorage.getItem('bookmark'));
   const html = document.documentElement;
 
-  localStorage.setItem('bookmark', !isBookmarked);
-  html.dataset.bookmark = !isBookmarked;
+  localStorage.setItem('bookmark', isBookmarked);
+  html.dataset.bookmark = isBookmarked;
   setToggleBookmarkAttributes();
 }
 

@@ -13,7 +13,7 @@
 
     justify-content: center;
     height: var(--container-height);
-    background: url('../images/image-hero-mobile.jpg') center / cover no-repeat;
+    background: linear-gradient(to bottom, rgba(#000, 0.7), transparent 50%), url('../images/image-hero-mobile.jpg') center / cover no-repeat;
     padding-block-start: var(--container-padding-block-start);
   }
 

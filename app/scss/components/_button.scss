@@ -1,6 +1,7 @@
 @use '../abstracts/' as *;
 
 .button {
+  $nav: '.nav';
   --button-radius: calc(var(--button-height) / 2);
   --button-transition: var(--duration-2) ease;
 
@@ -29,15 +30,15 @@
         @extend .icon;
         display: none;
       }
-    }
 
-    &.active .icon {
-      &--hamburger {
-        display: none;
-      }
+      #{$nav}.active & {
+        &--hamburger {
+          display: none;
+        }
 
-      &--close {
-        display: block;
+        &--close {
+          display: block;
+        }
       }
     }
   }
