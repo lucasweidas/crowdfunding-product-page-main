@@ -19,14 +19,6 @@
     }
   }
 
-  &__wrapper {
-    --wrapper-padding: 1.5rem;
-
-    border: var(--border-1);
-    border-radius: var(--radius-1);
-    padding: var(--wrapper-padding);
-  }
-
   &__values {
     font-weight: var(--font-weight-5);
     color: var(--color-cyan-6);

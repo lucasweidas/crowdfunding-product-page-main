@@ -52,7 +52,8 @@ body {
 }
 
 .paragraph {
+  --margin-block-end: 1.5rem;
   color: var(--color-gray-5);
   line-height: 1.6;
-  margin-block-end: rem(24);
+  margin-block-end: var(--margin-block-end);
 }

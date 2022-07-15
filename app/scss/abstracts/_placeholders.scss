@@ -3,6 +3,8 @@
 @use 'mixin' as *;
 
 %button-cyan {
+  width: var(--button-width);
+  height: var(--button-height);
   background-color: var(--color-cyan-6);
   border-radius: var(--button-radius);
   color: var(--color-white-5);
