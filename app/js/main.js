@@ -23,25 +23,29 @@ function checkHeaderClick({ target }) {
   }
 }
 
-function checkMainClick({ target }) {
+function checkMainClick(evt) {
+  const { target } = evt;
   if (target.hasAttribute('data-button-bookmark')) {
     return toggleBookmark();
   }
+
   if (target.hasAttribute('data-cto-selection')) {
     return openSelectionModal();
   }
-  if (target.hasAttribute('data-close-selection')) {
+
+  if (target.hasAttribute('data-close-selection') || target.hasAttribute('data-modal-selection')) {
     return closeSelectionModal();
   }
-  if (target.hasAttribute('data-modal-selection')) {
-    return closeSelectionModal();
+
+  if (target.hasAttribute('data-button-select')) {
+    console.log(evt);
+    return selectedItem(target);
   }
 }
 
 function checkMainChange({ target }) {
   if (target.hasAttribute('data-reward-radio')) {
-    rewardSelected(target);
-    return;
+    return rewardSelected(target);
   }
 }
 
@@ -118,6 +122,19 @@ function collapseContainer() {
   setContainerHeight(0);
   removeResizeObserver();
   toggleDisabled();
+}
+
+function selectedItem(button) {
+  const value = button.dataset.buttonSelect;
+  const item = document.querySelector(`[data-reward-item='${value}']`);
+  const radioInput = item.querySelector('[data-reward-radio]');
+
+  openSelectionModal();
+  radioInput.checked = true;
+  radioInput.focus();
+  rewardSelected(radioInput);
+  // const focused = document.activeElement;
+  // console.log(focused);
 }
 
 // Helpers

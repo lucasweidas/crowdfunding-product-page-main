@@ -14,7 +14,10 @@
   background-color: var(--color-black-2);
 
   &.active {
-    @include animation-show();
+    transition: opacity var(--duration-2) ease-in-out;
+    visibility: visible;
+    opacity: 1;
+    // @include animation-show();
   }
 
   &.closing {

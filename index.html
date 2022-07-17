@@ -171,7 +171,7 @@
                       <span class="stats__number">101</span>
                       <span class="stats__text">left</span>
                     </div>
-                    <button class="button--select">Select Reward</button>
+                    <button class="button--select" data-button-select="1">Select Reward</button>
                   </div>
                 </div>
               </li>
@@ -189,7 +189,7 @@
                       <span class="stats__number">64</span>
                       <span class="stats__text">left</span>
                     </div>
-                    <button class="button--select">Select Reward</button>
+                    <button class="button--select" data-button-select="2">Select Reward</button>
                   </div>
                 </div>
               </li>
@@ -208,7 +208,7 @@
                       <span class="stats__number">0</span>
                       <span class="stats__text">left</span>
                     </div>
-                    <button class="button--select" autocomplete="off" disabled>Out of Stock</button>
+                    <button class="button--select" data-button-select="3" disabled>Out of Stock</button>
                   </div>
                 </div>
               </li>
@@ -218,7 +218,7 @@
         <!-- Section reward end -->
         <!-------------------------------------->
         <!-- Selection modal start -->
-        <div class="modal--selection container--modal active" data-modal-selection>
+        <div class="modal--selection container--modal" data-modal-selection>
           <section class="section--modal">
             <div class="wrapper--h-b">
               <h2 class="heading--h2">Back this project</h2>
@@ -237,7 +237,7 @@
             <form class="form" data-form action="./">
               <div class="reward">
                 <ol class="reward__list">
-                  <li class="reward__item" data-reward-item>
+                  <li class="reward__item" data-reward-item="0">
                     <div class="wrapper--reward">
                       <label class="wrapper--input">
                         <input class="input--radio" data-reward-radio type="radio" name="form-radio" id="form-radio-0" />
@@ -257,13 +257,13 @@
                             <label class="custom--number">
                               <input class="input--number" type="number" name="form-number" id="form-number-0" disabled />
                             </label>
-                            <input class="button--continue" type="submit" value="Continue" disabled>
+                            <input class="button--continue" type="submit" value="Continue" disabled />
                           </div>
                         </div>
                       </div>
                     </div>
                   </li>
-                  <li class="reward__item" data-reward-item>
+                  <li class="reward__item" data-reward-item="1">
                     <div class="wrapper--reward">
                       <label class="wrapper--input">
                         <input class="input--radio" data-reward-radio type="radio" name="form-radio" id="form-radio-1" />
@@ -288,13 +288,13 @@
                             <label class="custom--number">
                               <input class="input--number" type="number" name="form-number" id="form-number-1" value="25" min="25" disabled />
                             </label>
-                            <input class="button--continue" type="submit" value="Continue" disabled>
+                            <input class="button--continue" type="submit" value="Continue" disabled />
                           </div>
                         </div>
                       </div>
                     </div>
                   </li>
-                  <li class="reward__item" data-reward-item>
+                  <li class="reward__item" data-reward-item="2">
                     <div class="wrapper--reward">
                       <label class="wrapper--input">
                         <input class="input--radio" data-reward-radio type="radio" name="form-radio" id="form-radio-2" />
@@ -319,13 +319,13 @@
                             <label class="custom--number">
                               <input class="input--number" type="number" name="form-number" id="form-number-2" value="75" disabled />
                             </label>
-                            <input class="button--continue" type="submit" value="Continue" disabled>
+                            <input class="button--continue" type="submit" value="Continue" disabled />
                           </div>
                         </div>
                       </div>
                     </div>
                   </li>
-                  <li class="reward__item disabled" data-reward-item>
+                  <li class="reward__item disabled" data-reward-item="3">
                     <div class="wrapper--reward">
                       <label class="wrapper--input">
                         <input class="input--radio" data-reward-radio type="radio" name="form-radio" id="form-radio-3" disabled />
@@ -350,7 +350,7 @@
                             <label class="custom--number">
                               <input class="input--number" type="number" name="form-number" id="form-number-3" value="200" disabled />
                             </label>
-                            <input class="button--continue" type="submit" value="Continue" disabled>
+                            <input class="button--continue" type="submit" value="Continue" disabled />
                           </div>
                         </div>
                       </div>
