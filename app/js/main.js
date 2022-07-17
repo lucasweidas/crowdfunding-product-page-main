@@ -2,14 +2,13 @@ const header = document.querySelector('[data-header]');
 const main = document.querySelector('[data-main]');
 const selectionModal = document.querySelector('[data-modal-selection]');
 const form = document.querySelector('[data-form]');
-const rewardItem = {
-  selectedItem: null,
-  previousItem: null,
-  isActive: false,
-  wrapperGrow: null,
-  growChild: null,
-  childHeight: 0,
+const reward = {
+  item: null,
+  container: null,
+  content: null,
+  contentHeight: 0,
 };
+const observer = new ResizeObserver(verifyContentResize);
 
 header.addEventListener('click', checkHeaderClick);
 main.addEventListener('click', checkMainClick);
@@ -39,11 +38,10 @@ function checkMainClick({ target }) {
   }
 }
 
-function checkMainChange(evt) {
-  const { target } = evt;
+function checkMainChange({ target }) {
   if (target.hasAttribute('data-reward-radio')) {
-    rewardRadioSelected(target);
-    console.log(target.checked);
+    rewardSelected(target);
+    return;
   }
 }
 
@@ -52,14 +50,14 @@ function toggleMobileMenu() {
   const nav = document.querySelector('[data-nav]');
   const button = document.querySelector('[data-toggle-menu]');
 
-  toggleActiveClass(nav);
+  toggleActive(nav);
   const isActive = nav.classList.contains('active');
 
   button.setAttribute('aria-expanded', isActive);
   button.setAttribute('aria-pressed', isActive);
   if (isActive) return;
   nav.classList.add('closing');
-  nav.addEventListener('animationend', toggleClosingClass);
+  nav.addEventListener('animationend', toggleClosing);
 }
 
 // Bookmark Button
@@ -87,52 +85,83 @@ function setToggleBookmarkAttributes() {
 
 // Selection Modal
 function openSelectionModal() {
-  toggleActiveClass(selectionModal);
-  window.addEventListener('resize', setElementHeight);
+  toggleActive(selectionModal);
 }
 
 function closeSelectionModal() {
-  toggleActiveClass(selectionModal);
+  toggleActive(selectionModal);
   selectionModal.classList.add('closing');
-  selectionModal.addEventListener('animationend', toggleClosingClass);
+  selectionModal.addEventListener('animationend', toggleClosing);
 }
 
-function rewardRadioSelected(radioButton) {
-  rewardItem.selectedItem = getParent(radioButton, 'data-reward-item');
-  rewardItem.previousItem = rewardItem.selectedItem;
-  rewardItem.isActive = true;
-  rewardItem.wrapperGrow = rewardItem.selectedItem.querySelector('[data-wrapper-grow]');
-  rewardItem.growChild = rewardItem.wrapperGrow.firstElementChild;
-  console.log(rewardItem.growChild);
+function rewardSelected(target) {
+  if (reward.item !== null) collapseContainer();
+  setReward(target);
+  expandContainer();
+}
 
-  toggleActiveClass(rewardItem.selectedItem);
-  setElementHeight();
-  console.log(rewardItem.wrapperGrow);
+function setReward(radioInput) {
+  reward.item = radioInput.closest('[data-reward-item]');
+  reward.container = reward.item.querySelector('[data-wrapper-grow]');
+  reward.content = reward.container.firstElementChild;
+}
+
+function expandContainer() {
+  toggleActive(reward.item);
+  setContainerHeight();
+  setResizeObserver();
+  toggleDisabled();
+}
+
+function collapseContainer() {
+  toggleActive(reward.item);
+  setContainerHeight(0);
+  removeResizeObserver();
+  toggleDisabled();
 }
 
 // Helpers
-function toggleActiveClass(element) {
+function toggleActive(element) {
   element.classList.toggle('active');
 }
 
-function toggleClosingClass() {
+function toggleClosing() {
   this.classList.toggle('closing');
-  this.removeEventListener('animationend', toggleClosingClass);
+  this.removeEventListener('animationend', toggleClosing);
 }
 
-function getParent(element, attribute) {
-  const parent = element.parentElement;
-  if (parent.hasAttribute(attribute)) return parent;
-  return getParent(parent, attribute);
+function setContainerHeight(height = getContentHeight()) {
+  const { container } = reward;
+  container.style.maxHeight = `${height}px`;
 }
 
-function setElementHeight() {
-  const height = rewardItem.growChild.offsetHeight;
-  rewardItem.childHeight = height;
+function getContentHeight() {
+  const { height } = reward.content.getBoundingClientRect();
+  reward.contentHeight = height;
+  return height;
+}
 
-  if (rewardItem.isActive) {
-    rewardItem.wrapperGrow.style.maxHeight = `${height}px`;
-  } else {
-    rewardItem.wrapperGrow.style.maxHeight = '0px';
-  }
+function verifyContentResize(entries) {
+  const elementBlockSize = entries[0].borderBoxSize[0].blockSize;
+  if (elementBlockSize === reward.contentHeight) return;
+  setContainerHeight();
+}
+
+function setResizeObserver() {
+  const { content } = reward;
+  observer.observe(content);
+}
+
+function removeResizeObserver() {
+  const { content } = reward;
+  observer.unobserve(content);
+}
+
+function toggleDisabled() {
+  const { content } = reward;
+  const inputs = content.querySelectorAll('input');
+
+  inputs.forEach(input => {
+    input.toggleAttribute('disabled');
+  });
 }

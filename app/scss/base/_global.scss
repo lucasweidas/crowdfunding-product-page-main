@@ -21,6 +21,12 @@
   --modal-z-index: 200;
 }
 
+*,
+*::after,
+*::before {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: var(--color-white-8);
 }

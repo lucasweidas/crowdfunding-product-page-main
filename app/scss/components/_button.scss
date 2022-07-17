@@ -97,5 +97,6 @@
     --button-height: 3rem;
     @extend .button;
     @extend %button-cyan;
+    padding-inline: 0.5rem;
   }
 }

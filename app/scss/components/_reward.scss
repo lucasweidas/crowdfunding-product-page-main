@@ -11,10 +11,10 @@
   &__item {
     &.disabled {
       opacity: 0.5;
+      pointer-events: none;
 
       .button--select {
         background-color: var(--color-gray-5);
-        cursor: not-allowed;
       }
     }
   }

@@ -39,6 +39,10 @@
       --wrapper-padding: 1.5rem 1.5rem 0;
     }
 
+    .reward__item.active & {
+      border-color: var(--color-cyan-6);
+    }
+
     .reward__item:first-of-type > & {
       grid-template-areas:
         'input'
@@ -118,40 +122,20 @@
   }
 
   &--grow {
+    width: calc(100% + 3rem);
     max-height: 0;
     overflow: hidden;
-    transition: max-height 200ms ease-in-out;
-
-    .reward__item.active & {
-      animation: grow var(--animation-2);
-
-      @keyframes grow {
-        100% {
-          overflow: visible;
-        }
-      }
-    }
-
-    .reward__item.closing & {
-      animation: collapse var(--animation-2);
-
-      @keyframes collapse {
-        0% {
-          overflow: visible;
-        }
-        100% {
-          overflow: hidden;
-        }
-      }
-    }
+    margin-inline-start: -1.5rem;
+    transition: max-height var(--duration-2) ease-in-out;
   }
 
   &--enter {
     @extend .wrapper;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     position: relative;
-    padding-block-end: 1.5rem;
+    padding: 0 1.5rem 1.5rem;
 
     &::before {
       content: '';
@@ -207,6 +191,7 @@
 
   &--continue {
     @extend .wrapper;
+    justify-content: center;
     gap: 1rem;
   }
 }
