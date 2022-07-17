@@ -31,6 +31,10 @@
     @extend .stats;
     align-items: center;
     column-gap: rem(10);
+
+    .modal--selection & {
+      margin-block-end: 1.5rem;
+    }
   }
 
   &__number {

@@ -12,10 +12,8 @@
 
   &--label {
     @extend .wrapper;
-    // --wrapper-margin-block-end: 1.5rem;
     flex-direction: column;
     row-gap: rem(10);
-    // margin-block-end: var(--wrapper-margin-block-end);
   }
 
   &--select {
@@ -37,6 +35,10 @@
     border: var(--border-1);
     border-radius: var(--radius-1);
 
+    .modal--selection & {
+      --wrapper-padding: 1.5rem 1.5rem 0;
+    }
+
     .reward__item:first-of-type > & {
       grid-template-areas:
         'input'
@@ -49,7 +51,6 @@
     }
 
     .paragraph {
-      // --margin-block-end: 0;
       --paragraph-padding-block: 1.75rem 1.5rem;
       grid-area: paragraph;
     }
@@ -69,12 +70,10 @@
   }
 
   &--input {
-    --margin-block-end: 1.5rem;
     @extend .wrapper;
     width: fit-content;
     align-items: center;
     column-gap: rem(16);
-    // margin-block-end: var(--margin-block-end);
     cursor: pointer;
 
     .wrapper--label {
@@ -118,20 +117,41 @@
     }
   }
 
-  &--enter {
-    @extend .wrapper;
-    --wrapper--enter-height: 0;
-    // height: var(--wrapper--enter-height);
-    flex-direction: column;
-    align-items: center;
-    row-gap: rem(20);
-    position: relative;
-    // overflow-y: hidden;
-    // padding-block-start: 2rem;
+  &--grow {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 200ms ease-in-out;
 
     .reward__item.active & {
-      height: var(--wrapper--enter-height);
+      animation: grow var(--animation-2);
+
+      @keyframes grow {
+        100% {
+          overflow: visible;
+        }
+      }
     }
+
+    .reward__item.closing & {
+      animation: collapse var(--animation-2);
+
+      @keyframes collapse {
+        0% {
+          overflow: visible;
+        }
+        100% {
+          overflow: hidden;
+        }
+      }
+    }
+  }
+
+  &--enter {
+    @extend .wrapper;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding-block-end: 1.5rem;
 
     &::before {
       content: '';
@@ -140,15 +160,6 @@
       position: absolute;
       top: 0;
       border-block-start: var(--border-1);
-      padding-block-end: 2rem;
-    }
-
-    .paragraph {
-      --paragraph-padding-block: 0;
-    }
-
-    .wrapper {
-      gap: 1rem;
     }
 
     .custom--number {
@@ -192,5 +203,10 @@
         border-color: red;
       }
     }
+  }
+
+  &--continue {
+    @extend .wrapper;
+    gap: 1rem;
   }
 }
