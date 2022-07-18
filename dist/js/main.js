@@ -7,6 +7,8 @@ const reward = {
   container: null,
   content: null,
   contentHeight: 0,
+  previousFocused: null,
+  modalFocused: null,
 };
 const observer = new ResizeObserver(verifyContentResize);
 
@@ -30,7 +32,9 @@ function checkMainClick(evt) {
   }
 
   if (target.hasAttribute('data-cto-selection')) {
-    return openSelectionModal();
+    openSelectionModal(target);
+    // setModalFocus();
+    return;
   }
 
   if (target.hasAttribute('data-close-selection') || target.hasAttribute('data-modal-selection')) {
@@ -38,7 +42,6 @@ function checkMainClick(evt) {
   }
 
   if (target.hasAttribute('data-button-select')) {
-    console.log(evt);
     return selectedItem(target);
   }
 }
@@ -60,8 +63,7 @@ function toggleMobileMenu() {
   button.setAttribute('aria-expanded', isActive);
   button.setAttribute('aria-pressed', isActive);
   if (isActive) return;
-  nav.classList.add('closing');
-  nav.addEventListener('animationend', toggleClosing);
+  setClosing(nav);
 }
 
 // Bookmark Button
@@ -88,19 +90,22 @@ function setToggleBookmarkAttributes() {
 }
 
 // Selection Modal
-function openSelectionModal() {
+function openSelectionModal(button) {
   toggleActive(selectionModal);
+  reward.previousFocused = button;
 }
 
 function closeSelectionModal() {
+  const { previousFocused } = reward;
+
   toggleActive(selectionModal);
-  selectionModal.classList.add('closing');
-  selectionModal.addEventListener('animationend', toggleClosing);
+  setClosing(selectionModal);
+  previousFocused.focus();
 }
 
-function rewardSelected(target) {
+function rewardSelected(radioInput) {
   if (reward.item !== null) collapseContainer();
-  setReward(target);
+  setReward(radioInput);
   expandContainer();
 }
 
@@ -129,12 +134,10 @@ function selectedItem(button) {
   const item = document.querySelector(`[data-reward-item='${value}']`);
   const radioInput = item.querySelector('[data-reward-radio]');
 
-  openSelectionModal();
+  openSelectionModal(button);
   radioInput.checked = true;
   radioInput.focus();
   rewardSelected(radioInput);
-  // const focused = document.activeElement;
-  // console.log(focused);
 }
 
 // Helpers
@@ -142,9 +145,17 @@ function toggleActive(element) {
   element.classList.toggle('active');
 }
 
-function toggleClosing() {
-  this.classList.toggle('closing');
-  this.removeEventListener('animationend', toggleClosing);
+function setClosing(element) {
+  element.classList.add('closing');
+  element.addEventListener(
+    'animationend',
+    () => {
+      element.classList.remove('closing');
+      if (reward.item === null) return;
+      resetSelectionModal();
+    },
+    { once: true }
+  );
 }
 
 function setContainerHeight(height = getContentHeight()) {
@@ -181,5 +192,28 @@ function toggleDisabled() {
   inputs.forEach(input => {
     input.toggleAttribute('disabled');
   });
+}
+
+function resetReward() {
+  for (const key in reward) {
+    if (isNaN(reward[key])) {
+      reward[key] = null;
+      continue;
+    }
+    reward[key] = 0;
+  }
+}
+
+function resetSelectionModal() {
+  collapseContainer();
+  resetReward();
+  form.reset();
+}
+
+function setModalFocus() {
+  const button = document.querySelector('[data-close-selection]');
+  button.focus();
+  console.log(document.activeElement);
+  console.log(button);
 }
 //# sourceMappingURL=main.js.map
