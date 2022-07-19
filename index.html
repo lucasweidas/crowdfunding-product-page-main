@@ -53,10 +53,10 @@
             aria-expanded="false"
             aria-pressed="false"
           >
-            <svg class="icon--hamburger" viewBox="0 0 16 15" width="16" height="15" xmlns="http://www.w3.org/2000/svg">
+            <svg class="icon--hamburger" viewBox="0 0 16 15" width="16" height="15" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
               <g fill="#FFF" fill-rule="evenodd"><path d="M0 0h16v3H0zM0 6h16v3H0zM0 12h16v3H0z" /></g>
             </svg>
-            <svg class="icon--close-1" viewBox="0 0 14 15" width="14" height="15" xmlns="http://www.w3.org/2000/svg">
+            <svg class="icon--close-1" viewBox="0 0 14 15" width="14" height="15" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
               <g fill="#FFF" fill-rule="evenodd">
                 <path d="M2.404.782l11.314 11.314-2.122 2.122L.282 2.904z" />
                 <path d="M.282 12.096L11.596.782l2.122 2.122L2.404 14.218z" />
@@ -86,7 +86,7 @@
         <!-- Section intro start -->
         <section class="section--intro">
           <div class="section__logo">
-            <svg width="56" height="56" xmlns="http://www.w3.org/2000/svg">
+            <svg width="56" height="56" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
               <g fill="none" fill-rule="evenodd">
                 <circle fill="#000" cx="28" cy="28" r="28" />
                 <g fill-rule="nonzero">
@@ -105,7 +105,7 @@
           <h1 class="heading--h1">Mastercraft Bamboo Monitor Riser</h1>
           <p class="paragraph">A beautiful & handcrafted monitor stand to reduce neck and eye strain.</p>
           <div class="wrapper--button">
-            <button class="button--large" data-cto-selection>Back this project</button>
+            <button class="button--large" data-cto-selection aria-controls="modal-selection" aria-haspopup="dialog">Back this project</button>
             <button class="button--bookmark" data-button-bookmark aria-pressed="false" aria-label="Add Bookmark">
               <svg width="56" height="56" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <g fill="none" fill-rule="evenodd">
@@ -171,7 +171,7 @@
                       <span class="stats__number">101</span>
                       <span class="stats__text">left</span>
                     </div>
-                    <button class="button--select" data-button-select="1">Select Reward</button>
+                    <button class="button--select" data-button-select="1" aria-controls="modal-selection" aria-haspopup="dialog">Select Reward</button>
                   </div>
                 </div>
               </li>
@@ -189,7 +189,7 @@
                       <span class="stats__number">64</span>
                       <span class="stats__text">left</span>
                     </div>
-                    <button class="button--select" data-button-select="2">Select Reward</button>
+                    <button class="button--select" data-button-select="2" aria-controls="modal-selection" aria-haspopup="dialog">Select Reward</button>
                   </div>
                 </div>
               </li>
@@ -208,7 +208,7 @@
                       <span class="stats__number">0</span>
                       <span class="stats__text">left</span>
                     </div>
-                    <button class="button--select" data-button-select="3" disabled>Out of Stock</button>
+                    <button class="button--select" data-button-select="3" aria-controls="modal-selection" aria-haspopup="dialog" disabled>Out of Stock</button>
                   </div>
                 </div>
               </li>
@@ -218,12 +218,12 @@
         <!-- Section reward end -->
         <!-------------------------------------->
         <!-- Selection modal start -->
-        <div class="modal--selection container--modal" data-modal-selection role="dialog">
+        <div class="modal--selection container--modal" id="modal-selection" data-modal-selection role="dialog" aria-hidden="true">
           <section class="section--modal">
             <div class="wrapper--h-b">
               <h2 class="heading--h2">Back this project</h2>
               <button class="button--close" data-close-selection aria-label="Close modal">
-                <svg class="icon--close-2" viewBox="0 0 15 15" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+                <svg class="icon--close-2" viewBox="0 0 15 15" width="15" height="15" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M11.314 0l2.828 2.828L9.9 7.071l4.243 4.243-2.828 2.828L7.07 9.9l-4.243 4.243L0 11.314 4.242 7.07 0 2.828 2.828 0l4.243 4.242L11.314 0z"
                     fill="#000"
@@ -367,7 +367,7 @@
         <div class="modal--success">
           <section class="section">
             <div class="modal__icon">
-              <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
+              <svg width="64" height="64" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
                 <g fill="none" fill-rule="evenodd">
                   <circle fill="#3CB3AB" cx="32" cy="32" r="32" />
                   <path stroke="#FFF" stroke-width="5" d="M20 31.86L28.093 40 44 24" />

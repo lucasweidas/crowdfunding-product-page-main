@@ -1,4 +1,5 @@
 const header = document.querySelector('[data-header]');
+const nav = document.querySelector('[data-nav]');
 const main = document.querySelector('[data-main]');
 const selectionModal = document.querySelector('[data-modal-selection]');
 const form = document.querySelector('[data-form]');
@@ -25,15 +26,14 @@ function checkHeaderClick({ target }) {
   }
 }
 
-function checkMainClick(evt) {
-  const { target } = evt;
+function checkMainClick({ target }) {
   if (target.hasAttribute('data-button-bookmark')) {
     return toggleBookmark();
   }
 
   if (target.hasAttribute('data-cto-selection')) {
     openSelectionModal(target);
-    // setModalFocus();
+    setSelectionModalFocus();
     return;
   }
 
@@ -54,16 +54,15 @@ function checkMainChange({ target }) {
 
 // Mobile Navigation Menu
 function toggleMobileMenu() {
-  const nav = document.querySelector('[data-nav]');
   const button = document.querySelector('[data-toggle-menu]');
 
   toggleActive(nav);
-  const isActive = nav.classList.contains('active');
+  const isActive = hasActive(nav);
 
   button.setAttribute('aria-expanded', isActive);
   button.setAttribute('aria-pressed', isActive);
-  if (isActive) return;
-  setClosing(nav);
+  isActive && document.addEventListener('keydown', verifyKeyDown);
+  isActive || setClosing(nav);
 }
 
 // Bookmark Button
@@ -93,6 +92,8 @@ function setToggleBookmarkAttributes() {
 function openSelectionModal(button) {
   toggleActive(selectionModal);
   reward.previousFocused = button;
+  selectionModal.setAttribute('aria-hidden', false);
+  document.addEventListener('keydown', verifyKeyDown);
 }
 
 function closeSelectionModal() {
@@ -100,11 +101,14 @@ function closeSelectionModal() {
 
   toggleActive(selectionModal);
   setClosing(selectionModal);
+  selectionModal.setAttribute('aria-hidden', true);
+  // reward.modalFocused = document.activeElement;
+  // console.log(reward.modalFocused);
   previousFocused.focus();
 }
 
 function rewardSelected(radioInput) {
-  if (reward.item !== null) collapseContainer();
+  reward.item && collapseContainer();
   setReward(radioInput);
   expandContainer();
 }
@@ -151,8 +155,8 @@ function setClosing(element) {
     'animationend',
     () => {
       element.classList.remove('closing');
-      if (reward.item === null) return;
-      resetSelectionModal();
+      document.removeEventListener('keydown', verifyKeyDown);
+      // reward.item && resetSelectionModal();
     },
     { once: true }
   );
@@ -210,10 +214,24 @@ function resetSelectionModal() {
   form.reset();
 }
 
-function setModalFocus() {
+function setSelectionModalFocus() {
   const button = document.querySelector('[data-close-selection]');
   button.focus();
-  console.log(document.activeElement);
-  console.log(button);
+}
+
+function verifyKeyDown({ key }) {
+  if (key !== 'Escape') return;
+
+  if (hasActive(nav)) return toggleMobileMenu();
+
+  if (hasActive(selectionModal)) return closeSelectionModal();
+}
+
+function hasActive(element) {
+  return element.classList.contains('active');
+}
+
+function setPreviousModalFocused() {
+  reward.modalFocused.focus();
 }
 //# sourceMappingURL=main.js.map

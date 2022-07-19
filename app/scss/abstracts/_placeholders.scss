@@ -8,7 +8,7 @@
   background-color: var(--color-cyan-6);
   border-radius: var(--button-radius);
   color: var(--color-white-5);
-  transition-property: background-color;
+  transition: background-color var(--button-transition);
 
   &:is(:hover, :focus-visible) {
     background-color: var(--color-cyan-8);

@@ -1,7 +1,6 @@
 @use '../abstracts/' as *;
 
 .button {
-  $nav: '.nav';
   --button-radius: calc(var(--button-height) / 2);
   --button-transition: var(--duration-2) ease;
 
@@ -9,7 +8,6 @@
   justify-content: center;
   align-items: center;
   font-weight: var(--font-weight-5);
-  transition: var(--button-transition);
 
   &--menu {
     @extend .button;
@@ -17,24 +15,24 @@
   }
 
   &--large {
-    --button-width: min(100%, 13.375rem);
-    --button-height: 3.5rem;
     @extend .button;
     @extend %button-cyan;
+    --button-width: min(100%, 13.375rem);
+    --button-height: 3.5rem;
     padding-inline: rem(8);
   }
 
   &--bookmark {
+    @extend .button;
     --button-width: 3.5rem;
     --button-height: var(--button-width);
-    @extend .button;
     width: var(--button-width);
     height: var(--button-height);
     flex-shrink: 0;
     background-color: var(--color-white-8);
     border-radius: 50%;
     overflow: hidden;
-    transition-property: color;
+    transition: color var(--button-transition);
 
     path,
     circle {
@@ -71,10 +69,10 @@
   }
 
   &--select {
-    --button-width: min(100%, 9.75rem);
-    --button-height: 3rem;
     @extend .button;
     @extend %button-cyan;
+    --button-width: min(100%, 9.75rem);
+    --button-height: 3rem;
   }
 
   &--close {
@@ -87,16 +85,17 @@
       transition: opacity var(--button-transition);
     }
 
-    &:hover path {
+    &:hover path,
+    &:focus-visible path {
       opacity: 1;
     }
   }
 
   &--continue {
-    --button-width: 7.125rem;
-    --button-height: 3rem;
     @extend .button;
     @extend %button-cyan;
+    --button-width: 7.125rem;
+    --button-height: 3rem;
     padding-inline: 0.5rem;
   }
 }
