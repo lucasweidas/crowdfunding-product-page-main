@@ -18,11 +18,32 @@
     />
     <link rel="stylesheet" href="dist/css/main.css" />
     <script>
-      if (!localStorage.getItem('bookmark')) {
-        localStorage.setItem('bookmark', false);
+      const directory = 'crowdfunding-product-page-main';
+      // const directory = location.pathname.split('/')[1];
+      if (!localStorage['data']) {
+        localStorage.setItem('data', JSON.stringify({}));
       }
+      if (!hasDirectory()) initLocalStorage();
+
+      function initLocalStorage() {
+        const data = getData();
+        data[directory] = {
+          bookmark: false,
+        };
+        localStorage['data'] = JSON.stringify(data);
+      }
+
+      function hasDirectory() {
+        const data = getData();
+        return directory in data;
+      }
+
+      function getData() {
+        return JSON.parse(localStorage['data']);
+      }
+
       const html = document.documentElement;
-      const isBookmarked = localStorage.getItem('bookmark');
+      const isBookmarked = getData()[directory].bookmark;
       html.setAttribute('data-bookmark', isBookmarked);
     </script>
     <script src="dist/js/main.js" defer></script>
@@ -257,7 +278,7 @@
                             <label class="custom--number">
                               <input class="input--number" type="number" name="form-number" id="form-number-0" disabled />
                             </label>
-                            <input class="button--continue" type="submit" value="Continue" disabled />
+                            <input class="button--continue" data-submit="form-number-0" type="submit" value="Continue" disabled />
                           </div>
                         </div>
                       </div>
@@ -288,7 +309,7 @@
                             <label class="custom--number">
                               <input class="input--number" type="number" name="form-number" id="form-number-1" value="25" min="25" disabled />
                             </label>
-                            <input class="button--continue" type="submit" value="Continue" disabled />
+                            <input class="button--continue" data-submit="form-number-1" type="submit" value="Continue" disabled />
                           </div>
                         </div>
                       </div>
@@ -319,7 +340,7 @@
                             <label class="custom--number">
                               <input class="input--number" type="number" name="form-number" id="form-number-2" value="75" disabled />
                             </label>
-                            <input class="button--continue" type="submit" value="Continue" disabled />
+                            <input class="button--continue" data-submit="form-number-2" type="submit" value="Continue" disabled />
                           </div>
                         </div>
                       </div>
@@ -350,7 +371,7 @@
                             <label class="custom--number">
                               <input class="input--number" type="number" name="form-number" id="form-number-3" value="200" disabled />
                             </label>
-                            <input class="button--continue" type="submit" value="Continue" disabled />
+                            <input class="button--continue" data-submit="form-number-3" type="submit" value="Continue" disabled />
                           </div>
                         </div>
                       </div>

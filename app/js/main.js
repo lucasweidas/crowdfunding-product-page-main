@@ -9,16 +9,13 @@ const reward = {
   content: null,
   contentHeight: 0,
   previousFocused: null,
-  modalFocused: null,
 };
 const observer = new ResizeObserver(verifyContentResize);
 
 header.addEventListener('click', checkHeaderClick);
 main.addEventListener('click', checkMainClick);
 main.addEventListener('change', checkMainChange);
-form.addEventListener('submit', evt => {
-  evt.preventDefault();
-});
+form.addEventListener('submit', verifyForm);
 
 function checkHeaderClick({ target }) {
   if (target.hasAttribute('data-toggle-menu') || target.hasAttribute('data-overlay')) {
@@ -67,17 +64,36 @@ function toggleMobileMenu() {
 
 // Bookmark Button
 function toggleBookmark() {
-  const isBookmarked = !JSON.parse(localStorage.getItem('bookmark'));
+  const isBookmarked = !getBookmarkData();
   const html = document.documentElement;
 
-  localStorage.setItem('bookmark', isBookmarked);
+  setBookmarkData(isBookmarked);
   html.dataset.bookmark = isBookmarked;
   setToggleBookmarkAttributes();
 }
 
+function getData() {
+  return JSON.parse(localStorage['data']);
+}
+
+function setBookmarkData(value) {
+  const data = getData();
+  const directory = 'crowdfunding-product-page-main';
+  // const directory = location.pathname.split('/')[1];
+  data[directory].bookmark = value;
+  localStorage['data'] = JSON.stringify(data);
+}
+
+function getBookmarkData() {
+  const data = getData();
+  const directory = 'crowdfunding-product-page-main';
+  // const directory = location.pathname.split('/')[1];
+  return data[directory].bookmark;
+}
+
 setToggleBookmarkAttributes();
 function setToggleBookmarkAttributes() {
-  const isBookmarked = JSON.parse(localStorage.getItem('bookmark'));
+  const isBookmarked = getBookmarkData();
   const button = document.querySelector('[data-button-bookmark]');
 
   button.setAttribute('aria-pressed', isBookmarked);
@@ -102,8 +118,6 @@ function closeSelectionModal() {
   toggleActive(selectionModal);
   setClosing(selectionModal);
   selectionModal.setAttribute('aria-hidden', true);
-  // reward.modalFocused = document.activeElement;
-  // console.log(reward.modalFocused);
   previousFocused.focus();
 }
 
@@ -231,6 +245,7 @@ function hasActive(element) {
   return element.classList.contains('active');
 }
 
-function setPreviousModalFocused() {
-  reward.modalFocused.focus();
+function verifyForm(evt) {
+  console.log(evt);
+  evt.preventDefault();
 }
