@@ -72,22 +72,14 @@ function toggleBookmark() {
   setToggleBookmarkAttributes();
 }
 
-function getData() {
-  return JSON.parse(localStorage['data']);
-}
-
 function setBookmarkData(value) {
   const data = getData();
-  const directory = 'crowdfunding-product-page-main';
-  // const directory = location.pathname.split('/')[1];
   data[directory].bookmark = value;
   localStorage['data'] = JSON.stringify(data);
 }
 
 function getBookmarkData() {
   const data = getData();
-  const directory = 'crowdfunding-product-page-main';
-  // const directory = location.pathname.split('/')[1];
   return data[directory].bookmark;
 }
 

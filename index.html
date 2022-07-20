@@ -18,14 +18,14 @@
     />
     <link rel="stylesheet" href="dist/css/main.css" />
     <script>
-      const directory = 'crowdfunding-product-page-main';
-      // const directory = location.pathname.split('/')[1];
+      const directory = location.pathname.split('/')[1] || 'app';
+      const html = document.documentElement;
+
       if (!localStorage['data']) {
         localStorage.setItem('data', JSON.stringify({}));
       }
-      if (!hasDirectory()) initLocalStorage();
 
-      function initLocalStorage() {
+      if (!getData()[directory]) {
         const data = getData();
         data[directory] = {
           bookmark: false,
@@ -33,20 +33,14 @@
         localStorage['data'] = JSON.stringify(data);
       }
 
-      function hasDirectory() {
-        const data = getData();
-        return directory in data;
-      }
-
       function getData() {
         return JSON.parse(localStorage['data']);
       }
 
-      const html = document.documentElement;
       const isBookmarked = getData()[directory].bookmark;
       html.setAttribute('data-bookmark', isBookmarked);
     </script>
-    <script src="dist/js/main.js" defer></script>
+    <script src="dist/js/main.js" type="module"></script>
   </head>
   <body>
     <!-- <img class="design" src="app/design/mobile-menu.jpg" alt=""> -->
