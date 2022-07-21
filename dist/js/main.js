@@ -11,6 +11,11 @@ const reward = {
   previousFocused: null,
 };
 const observer = new ResizeObserver(verifyContentResize);
+const focusable = {
+  firstFocusable: null,
+  focusableContent: null,
+  lastFocusable: null,
+};
 
 header.addEventListener('click', checkHeaderClick);
 main.addEventListener('click', checkMainClick);
@@ -29,8 +34,9 @@ function checkMainClick({ target }) {
   }
 
   if (target.hasAttribute('data-cto-selection')) {
+    toggleTabindex();
     openSelectionModal(target);
-    setSelectionModalFocus();
+    focusable.firstFocusable.focus();
     return;
   }
 
@@ -45,7 +51,9 @@ function checkMainClick({ target }) {
 
 function checkMainChange({ target }) {
   if (target.hasAttribute('data-reward-radio')) {
-    return rewardSelected(target);
+    toggleTabindex(target);
+    rewardSelected(target);
+    return;
   }
 }
 
@@ -102,6 +110,7 @@ function openSelectionModal(button) {
   reward.previousFocused = button;
   selectionModal.setAttribute('aria-hidden', false);
   document.addEventListener('keydown', verifyKeyDown);
+  setFocusable(selectionModal);
 }
 
 function closeSelectionModal() {
@@ -130,6 +139,7 @@ function expandContainer() {
   setContainerHeight();
   setResizeObserver();
   toggleDisabled();
+  setFocusable(selectionModal);
 }
 
 function collapseContainer() {
@@ -144,6 +154,7 @@ function selectedItem(button) {
   const item = document.querySelector(`[data-reward-item='${value}']`);
   const radioInput = item.querySelector('[data-reward-radio]');
 
+  toggleTabindex(radioInput);
   openSelectionModal(button);
   radioInput.checked = true;
   radioInput.focus();
@@ -162,7 +173,7 @@ function setClosing(element) {
     () => {
       element.classList.remove('closing');
       document.removeEventListener('keydown', verifyKeyDown);
-      // reward.item && resetSelectionModal();
+      reward.item && resetSelectionModal();
     },
     { once: true }
   );
@@ -225,12 +236,51 @@ function setSelectionModalFocus() {
   button.focus();
 }
 
-function verifyKeyDown({ key }) {
-  if (key !== 'Escape') return;
+function verifyKeyDown(evt) {
+  if (evt.key === 'Tab') return changeModalFocus(evt);
+
+  if (evt.key !== 'Escape') return;
 
   if (hasActive(nav)) return toggleMobileMenu();
 
   if (hasActive(selectionModal)) return closeSelectionModal();
+}
+
+function changeModalFocus(evt) {
+  const { firstFocusable, lastFocusable } = focusable;
+  const { activeElement } = document;
+  const { shiftKey } = evt;
+
+  // if shift + tab and first focusable element
+  if (shiftKey && activeElement === firstFocusable) {
+    lastFocusable.focus();
+    return evt.preventDefault();
+  }
+  // if only tab and last focusable element
+  if (!shiftKey && activeElement === lastFocusable) {
+    firstFocusable.focus();
+    evt.preventDefault();
+  }
+}
+
+function setFocusable(modal) {
+  const focusableElements = 'button:not([disabled]), input:not([disabled]):not([tabindex="-1"])';
+  const elements = modal.querySelectorAll(focusableElements);
+  focusable.firstFocusable = elements[0];
+  focusable.focusableContent = elements;
+  focusable.lastFocusable = elements[elements.length - 1];
+}
+
+function toggleTabindex(target) {
+  const radios = [...form.querySelectorAll('[data-reward-radio]')];
+  target = target || radios[0];
+
+  radios.forEach(radio => {
+    if (radio === target) {
+      return target.removeAttribute('tabindex');
+    }
+    radio.setAttribute('tabindex', '-1');
+  });
 }
 
 function hasActive(element) {
