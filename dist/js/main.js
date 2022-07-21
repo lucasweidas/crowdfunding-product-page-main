@@ -29,6 +29,8 @@ function checkHeaderClick({ target }) {
 }
 
 function checkMainClick({ target }) {
+  hasActive(nav) && toggleActive(nav);
+
   if (target.hasAttribute('data-button-bookmark')) {
     return toggleBookmark();
   }
