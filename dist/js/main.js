@@ -1,3 +1,4 @@
+// Global Variables
 const header = document.querySelector('[data-header]');
 const nav = document.querySelector('[data-nav]');
 const main = document.querySelector('[data-main]');
@@ -17,11 +18,13 @@ const focusable = {
   lastFocusable: null,
 };
 
+// Event Listeners
 header.addEventListener('click', checkHeaderClick);
 main.addEventListener('click', checkMainClick);
 main.addEventListener('change', checkMainChange);
 form.addEventListener('submit', verifyForm);
 
+// Event Checkers
 function checkHeaderClick({ target }) {
   if (target.hasAttribute('data-toggle-menu') || target.hasAttribute('data-overlay')) {
     return toggleMobileMenu();
@@ -29,7 +32,7 @@ function checkHeaderClick({ target }) {
 }
 
 function checkMainClick({ target }) {
-  hasActive(nav) && toggleActive(nav);
+  isActive(nav) && toggleActive(nav);
 
   if (target.hasAttribute('data-button-bookmark')) {
     return toggleBookmark();
@@ -59,17 +62,16 @@ function checkMainChange({ target }) {
   }
 }
 
-// Mobile Navigation Menu
+// Mobile Menu Navigation
 function toggleMobileMenu() {
-  const button = document.querySelector('[data-toggle-menu]');
-
   toggleActive(nav);
-  const isActive = hasActive(nav);
+  const button = document.querySelector('[data-toggle-menu]');
+  const active = isActive(nav);
 
-  button.setAttribute('aria-expanded', isActive);
-  button.setAttribute('aria-pressed', isActive);
-  isActive && document.addEventListener('keydown', verifyKeyDown);
-  isActive || setClosing(nav);
+  button.setAttribute('aria-expanded', active);
+  button.setAttribute('aria-pressed', active);
+  active && document.addEventListener('keydown', verifyKeyDown);
+  active || setClosing(nav);
 }
 
 // Bookmark Button
@@ -243,9 +245,9 @@ function verifyKeyDown(evt) {
 
   if (evt.key !== 'Escape') return;
 
-  if (hasActive(nav)) return toggleMobileMenu();
+  if (isActive(nav)) return toggleMobileMenu();
 
-  if (hasActive(selectionModal)) return closeSelectionModal();
+  if (isActive(selectionModal)) return closeSelectionModal();
 }
 
 function changeModalFocus(evt) {
@@ -285,12 +287,39 @@ function toggleTabindex(target) {
   });
 }
 
-function hasActive(element) {
+function isActive(element) {
   return element.classList.contains('active');
 }
 
 function verifyForm(evt) {
   console.log(evt);
   evt.preventDefault();
+  // const { submitter } = evt;
+  const { item } = reward;
+  const numberInput = item.querySelector('[data-number]');
+  const { value } = numberInput;
+  if (value.length === 0 || value === '') return;
+
+  const raised = document.querySelector('[data-raised]');
+  const backers = document.querySelector('[data-backers]');
+  const raisedValue = raised.dataset.raised;
+  const raisedTotal = Number(raisedValue) + Number(value);
+  const backersTotal = Number(backers.dataset.backers) + 1;
+  const rewardItem = item.dataset.rewardItem;
+
+  raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
+  raised.dataset.raised = raisedTotal;
+  backers.innerText = backersTotal;
+  backers.dataset.backers = backersTotal;
+  if (rewardItem === 0) return;
+
+  const selectors = `[data-reward-banner='${rewardItem}'] [data-remaining], [data-reward-item='${rewardItem}'] [data-remaining]`;
+  const remainings = document.querySelectorAll(selectors);
+  const remainingTotal = Number(remainings[0].dataset.remaining) - 1;
+
+  remainings.forEach(remaining => {
+    remaining.innerText = remainingTotal;
+    remaining.dataset.remaining = remainingTotal;
+  });
 }
 //# sourceMappingURL=main.js.map
