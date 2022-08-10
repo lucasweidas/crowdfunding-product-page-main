@@ -21,6 +21,10 @@
       const directory = location.pathname.split('/')[1] || 'app';
       const html = document.documentElement;
 
+      function getData() {
+        return JSON.parse(localStorage['data']);
+      }
+
       if (!localStorage['data']) {
         localStorage.setItem('data', JSON.stringify({}));
       }
@@ -29,16 +33,14 @@
         const data = getData();
         data[directory] = {
           bookmark: false,
+          raised: 89914,
+          backers: 5007,
         };
         localStorage['data'] = JSON.stringify(data);
       }
 
-      function getData() {
-        return JSON.parse(localStorage['data']);
-      }
-
-      const isBookmarked = getData()[directory].bookmark;
-      html.setAttribute('data-bookmark', isBookmarked);
+      const bookmarked = getData()[directory].bookmark;
+      html.setAttribute('data-bookmark', bookmarked);
     </script>
     <script src="dist/js/main.js" type="module"></script>
   </head>

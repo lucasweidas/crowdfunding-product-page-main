@@ -76,11 +76,11 @@ function toggleMobileMenu() {
 
 // Bookmark Button
 function toggleBookmark() {
-  const isBookmarked = !getBookmarkData();
+  const bookmarked = !getBookmarkData();
   const html = document.documentElement;
 
-  setBookmarkData(isBookmarked);
-  html.dataset.bookmark = isBookmarked;
+  setBookmarkData(bookmarked);
+  html.dataset.bookmark = bookmarked;
   setToggleBookmarkAttributes();
 }
 
@@ -97,11 +97,11 @@ function getBookmarkData() {
 
 setToggleBookmarkAttributes();
 function setToggleBookmarkAttributes() {
-  const isBookmarked = getBookmarkData();
+  const bookmarked = getBookmarkData();
   const button = document.querySelector('[data-button-bookmark]');
 
-  button.setAttribute('aria-pressed', isBookmarked);
-  if (isBookmarked) {
+  button.setAttribute('aria-pressed', bookmarked);
+  if (bookmarked) {
     button.setAttribute('aria-label', 'Remove bookmark');
   } else {
     button.setAttribute('aria-label', 'Add bookmark');
@@ -166,6 +166,20 @@ function selectedItem(button) {
 }
 
 // Helpers
+updateElementsData();
+function updateElementsData() {
+  const raised = document.querySelector('[data-raised]');
+  const backers = document.querySelector('[data-backers]');
+  const data = getData();
+  const { raised: raisedTotal } = data[directory];
+  const { backers: backersTotal } = data[directory];
+
+  raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
+  raised.dataset.raised = raisedTotal;
+  backers.innerText = Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(backersTotal);
+  backers.dataset.backers = backersTotal;
+}
+
 function toggleActive(element) {
   element.classList.toggle('active');
 }
@@ -292,7 +306,7 @@ function isActive(element) {
 }
 
 function verifyForm(evt) {
-  console.log(evt);
+  // console.log(evt);
   evt.preventDefault();
   // const { submitter } = evt;
   const { item } = reward;
@@ -300,6 +314,7 @@ function verifyForm(evt) {
   const { value } = numberInput;
   if (value.length === 0 || value === '') return;
 
+  const data = getData();
   const raised = document.querySelector('[data-raised]');
   const backers = document.querySelector('[data-backers]');
   const raisedValue = raised.dataset.raised;
@@ -309,17 +324,21 @@ function verifyForm(evt) {
 
   raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
   raised.dataset.raised = raisedTotal;
+  data[directory].raised = raisedTotal;
   backers.innerText = backersTotal;
   backers.dataset.backers = backersTotal;
-  if (rewardItem === 0) return;
+  data[directory].backers = backersTotal;
 
-  const selectors = `[data-reward-banner='${rewardItem}'] [data-remaining], [data-reward-item='${rewardItem}'] [data-remaining]`;
-  const remainings = document.querySelectorAll(selectors);
-  const remainingTotal = Number(remainings[0].dataset.remaining) - 1;
+  if (rewardItem !== '0') {
+    const selectors = `[data-reward-banner='${rewardItem}'] [data-remaining], [data-reward-item='${rewardItem}'] [data-remaining]`;
+    const remainings = document.querySelectorAll(selectors);
+    const remainingTotal = Number(remainings[0].dataset.remaining) - 1;
 
-  remainings.forEach(remaining => {
-    remaining.innerText = remainingTotal;
-    remaining.dataset.remaining = remainingTotal;
-  });
+    remainings.forEach(remaining => {
+      remaining.innerText = remainingTotal;
+      remaining.dataset.remaining = remainingTotal;
+    });
+  }
+  localStorage['data'] = JSON.stringify(data);
 }
 //# sourceMappingURL=main.js.map
