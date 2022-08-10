@@ -66,21 +66,21 @@ function checkMainChange({ target }) {
 function toggleMobileMenu() {
   toggleActive(nav);
   const button = document.querySelector('[data-toggle-menu]');
-  const hasActive = isActive(nav);
+  const active = isActive(nav);
 
-  button.setAttribute('aria-expanded', hasActive);
-  button.setAttribute('aria-pressed', hasActive);
-  hasActive && document.addEventListener('keydown', verifyKeyDown);
-  hasActive || setClosing(nav);
+  button.setAttribute('aria-expanded', active);
+  button.setAttribute('aria-pressed', active);
+  active && document.addEventListener('keydown', verifyKeyDown);
+  active || setClosing(nav);
 }
 
 // Bookmark Button
 function toggleBookmark() {
-  const isBookmarked = !getBookmarkData();
+  const bookmarked = !getBookmarkData();
   const html = document.documentElement;
 
-  setBookmarkData(isBookmarked);
-  html.dataset.bookmark = isBookmarked;
+  setBookmarkData(bookmarked);
+  html.dataset.bookmark = bookmarked;
   setToggleBookmarkAttributes();
 }
 
@@ -97,11 +97,11 @@ function getBookmarkData() {
 
 setToggleBookmarkAttributes();
 function setToggleBookmarkAttributes() {
-  const isBookmarked = getBookmarkData();
+  const bookmarked = getBookmarkData();
   const button = document.querySelector('[data-button-bookmark]');
 
-  button.setAttribute('aria-pressed', isBookmarked);
-  if (isBookmarked) {
+  button.setAttribute('aria-pressed', bookmarked);
+  if (bookmarked) {
     button.setAttribute('aria-label', 'Remove bookmark');
   } else {
     button.setAttribute('aria-label', 'Add bookmark');

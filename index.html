@@ -39,8 +39,8 @@
         localStorage['data'] = JSON.stringify(data);
       }
 
-      const isBookmarked = getData()[directory].bookmark;
-      html.setAttribute('data-bookmark', isBookmarked);
+      const bookmarked = getData()[directory].bookmark;
+      html.setAttribute('data-bookmark', bookmarked);
     </script>
     <script src="dist/js/main.js" type="module"></script>
   </head>
