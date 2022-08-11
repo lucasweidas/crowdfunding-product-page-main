@@ -30,6 +30,7 @@
           bookmarked: false,
           raisedTotal: 89914,
           backersTotal: 5007,
+          rewards: [{ remainingTotal: 0 }, { remainingTotal: 101 }, { remainingTotal: 64 }, { remainingTotal: 0 }],
         };
         localStorage.setItem(directory, JSON.stringify(data));
       }
@@ -267,7 +268,7 @@
                           <span class="paragraph">Enter your pledge</span>
                           <div class="wrapper--continue">
                             <label class="custom--number">
-                              <input class="input--number" data-number type="number" name="form-number" id="form-number-0" disabled />
+                              <input class="input--number" data-number type="text" name="form-number" id="form-number-0" value="1" min="1" disabled />
                             </label>
                             <input class="button--continue" data-submit="form-number-0" type="submit" value="Continue" disabled />
                           </div>
@@ -298,7 +299,7 @@
                           <span class="paragraph">Enter your pledge</span>
                           <div class="wrapper--continue">
                             <label class="custom--number">
-                              <input class="input--number" data-number type="number" name="form-number" id="form-number-1" value="25" min="25" disabled />
+                              <input class="input--number" data-number type="text" name="form-number" id="form-number-1" value="25" min="25" disabled />
                             </label>
                             <input class="button--continue" data-submit="form-number-1" type="submit" value="Continue" disabled />
                           </div>
@@ -329,7 +330,7 @@
                           <span class="paragraph">Enter your pledge</span>
                           <div class="wrapper--continue">
                             <label class="custom--number">
-                              <input class="input--number" data-number type="number" name="form-number" id="form-number-2" value="75" disabled />
+                              <input class="input--number" data-number type="text" name="form-number" id="form-number-2" value="75" min="75" disabled />
                             </label>
                             <input class="button--continue" data-submit="form-number-2" type="submit" value="Continue" disabled />
                           </div>
@@ -360,7 +361,7 @@
                           <span class="paragraph">Enter your pledge</span>
                           <div class="wrapper--continue">
                             <label class="custom--number">
-                              <input class="input--number" data-number type="number" name="form-number" id="form-number-3" value="200" disabled />
+                              <input class="input--number" data-number type="text" name="form-number" id="form-number-3" value="200" min="200" disabled />
                             </label>
                             <input class="button--continue" data-submit="form-number-3" type="submit" value="Continue" disabled />
                           </div>

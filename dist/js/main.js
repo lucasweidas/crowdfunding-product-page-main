@@ -1,3 +1,16 @@
+// Initializer
+(() => {
+  const data = getData();
+  const items = document.querySelectorAll('[data-reward-item]');
+
+  setToggleBookmarkAttributes(data);
+  setBannerElementsData(data);
+  items.forEach(item => {
+    const disabled = item.classList.contains('disabled');
+    setRewardCardData(data, item.dataset, disabled);
+  });
+})();
+
 // Global Variables
 const header = document.querySelector('[data-header]');
 const nav = document.querySelector('[data-nav]');
@@ -23,6 +36,7 @@ header.addEventListener('click', checkHeaderClick);
 main.addEventListener('click', checkMainClick);
 main.addEventListener('change', checkMainChange);
 form.addEventListener('submit', verifyForm);
+form.addEventListener('keypress', validateInputValue);
 
 // Event Checkers
 function checkHeaderClick({ target }) {
@@ -90,7 +104,6 @@ function setBookmarkData(value) {
   localStorage[directory] = JSON.stringify(data);
 }
 
-setToggleBookmarkAttributes();
 function setToggleBookmarkAttributes() {
   const { bookmarked } = getData();
   const button = document.querySelector('[data-button-bookmark]');
@@ -292,55 +305,37 @@ function verifyForm(evt) {
   const { item } = reward;
   const numberInput = item.querySelector('[data-number]');
   const { value } = numberInput;
-  if (value.length === 0 || value === '') return;
+  const regex = /^([1-9]\d*)(\.\d{0,2})?$/;
 
-  updateProjectData(Number(value));
-  setBannerElementsData();
-  setRewardCardData(item.dataset);
-  return;
-  const { rewardItem } = item.dataset;
+  console.log(regex.test(value));
+  if (!regex.test(value)) return;
   const data = getData();
-  const raised = document.querySelector('[data-raised]');
-  const backers = document.querySelector('[data-backers]');
-  const barProgress = document.querySelector('[data-bar-progress]');
-  const raisedValue = raised.dataset.raised;
-  const raisedTotal = Number(raisedValue) + Number(value);
-  const backersTotal = Number(backers.dataset.backers) + 1;
-  // const progress = raisedTotal >= 100000 ? '100%' : `${(raisedTotal / 100000) * 100}%`;
-
-  raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
-  raised.dataset.raised = raisedTotal;
-  data.raisedTotal = raisedTotal;
-  backers.innerText = backersTotal;
-  backers.dataset.backers = backersTotal;
-  data.backersTotal = backersTotal;
-  barProgress.style.width = progress;
-
-  if (rewardItem !== '0') {
-    const selectors = `[data-reward-banner='${rewardItem}'] [data-remaining], [data-reward-item='${rewardItem}'] [data-remaining]`;
-    const remainings = document.querySelectorAll(selectors);
-    const remainingTotal = Number(remainings[0].dataset.remaining) - 1;
-
-    remainings.forEach(remaining => {
-      remaining.innerText = remainingTotal;
-      remaining.dataset.remaining = remainingTotal;
-    });
-  }
-  localStorage[directory] = JSON.stringify(data);
+  updateProjectData(data, Number(value), item.dataset);
+  setBannerElementsData(data);
+  setRewardCardData(data, item.dataset);
 }
 
-function updateProjectData(value) {
-  const data = getData();
-  const { raisedTotal } = data;
+function updateProjectData(data, value, { rewardItem }) {
+  const { raisedTotal, rewards } = data;
+  const { remainingTotal } = rewards[rewardItem];
+  // let dotIndex = String(raisedTotal).indexOf('.');
+  // const remainingInteger = Number(String(raisedTotal).slice(0, dotIndex));
+  // const remainingFractional = Number(String(raisedTotal).slice(dotIndex));
+  // dotIndex = String(value).indexOf('.');
+  // const valueInteger = Number(String(value).slice(0, dotIndex));
+  // const valueFractional = Number(String(value).slice(dotIndex));
+  // const fractionalTotal = (remainingFractional * 100 + valueFractional * 100) / 100;
+  // const integerTotal = remainingInteger + valueInteger;
+  // const newRaisedTotal = integerTotal + fractionalTotal;
 
+  // data.raisedTotal = newRaisedTotal;
   data.raisedTotal = raisedTotal + value;
   data.backersTotal++;
+  data.rewards[rewardItem].remainingTotal = remainingTotal === 0 ? remainingTotal : remainingTotal - 1;
   localStorage[directory] = JSON.stringify(data);
 }
 
-setBannerElementsData(true);
-function setBannerElementsData(init = false) {
-  const data = getData();
+function setBannerElementsData(data) {
   const { raisedTotal, backersTotal } = data;
   const raised = document.querySelector('[data-raised]');
   const backers = document.querySelector('[data-backers]');
@@ -348,25 +343,32 @@ function setBannerElementsData(init = false) {
   const progress = raisedTotal >= 100000 ? '100%' : `${(raisedTotal / 100000) * 100}%`;
 
   raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
-  // raised.dataset.raised = raisedTotal;
   backers.innerText = Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(backersTotal);
-  // backers.dataset.backers = backersTotal;
   barProgress.style.width = progress;
-
-  if (!init) return;
-  const items = document.querySelectorAll('[data-reward-item]');
-  items.forEach(item => setRewardCardData(item.dataset));
 }
 
-function setRewardCardData({ rewardItem }) {
-  if (rewardItem === '0') return;
+function setRewardCardData(data, { rewardItem }, disabled) {
+  if (rewardItem === '0' || disabled) return;
   const selectors = `[data-reward-banner='${rewardItem}'] [data-remaining], [data-reward-item='${rewardItem}'] [data-remaining]`;
   const remainings = document.querySelectorAll(selectors);
-  const remainingTotal = Number(remainings[0].dataset.remaining) - 1;
+  const { remainingTotal } = data.rewards[rewardItem];
 
   remainings.forEach(remaining => {
     remaining.innerText = remainingTotal;
     remaining.dataset.remaining = remainingTotal;
   });
+}
+
+function validateInputValue(evt) {
+  const {
+    key,
+    target: { value },
+  } = evt;
+  const hasDot = value.includes(key);
+  const fractionDigits = value.slice(value.indexOf('.'));
+
+  if ((!isFinite(key) && key !== '.') || (key === '.' && hasDot) || fractionDigits.length > 2) {
+    return evt.preventDefault();
+  }
 }
 //# sourceMappingURL=main.js.map
