@@ -76,7 +76,7 @@ function toggleMobileMenu() {
 
 // Bookmark Button
 function toggleBookmark() {
-  const bookmarked = !getBookmarkData();
+  const bookmarked = !getData().bookmarked;
   const html = document.documentElement;
 
   setBookmarkData(bookmarked);
@@ -86,18 +86,13 @@ function toggleBookmark() {
 
 function setBookmarkData(value) {
   const data = getData();
-  data[directory].bookmark = value;
-  localStorage['data'] = JSON.stringify(data);
-}
-
-function getBookmarkData() {
-  const data = getData();
-  return data[directory].bookmark;
+  data.bookmarked = value;
+  localStorage[directory] = JSON.stringify(data);
 }
 
 setToggleBookmarkAttributes();
 function setToggleBookmarkAttributes() {
-  const bookmarked = getBookmarkData();
+  const { bookmarked } = getData();
   const button = document.querySelector('[data-button-bookmark]');
 
   button.setAttribute('aria-pressed', bookmarked);
@@ -166,20 +161,6 @@ function selectedItem(button) {
 }
 
 // Helpers
-updateElementsData();
-function updateElementsData() {
-  const raised = document.querySelector('[data-raised]');
-  const backers = document.querySelector('[data-backers]');
-  const data = getData();
-  const { raised: raisedTotal } = data[directory];
-  const { backers: backersTotal } = data[directory];
-
-  raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
-  raised.dataset.raised = raisedTotal;
-  backers.innerText = Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(backersTotal);
-  backers.dataset.backers = backersTotal;
-}
-
 function toggleActive(element) {
   element.classList.toggle('active');
 }
@@ -306,7 +287,6 @@ function isActive(element) {
 }
 
 function verifyForm(evt) {
-  // console.log(evt);
   evt.preventDefault();
   // const { submitter } = evt;
   const { item } = reward;
@@ -317,17 +297,20 @@ function verifyForm(evt) {
   const data = getData();
   const raised = document.querySelector('[data-raised]');
   const backers = document.querySelector('[data-backers]');
+  const barProgress = document.querySelector('[data-bar-progress]');
   const raisedValue = raised.dataset.raised;
+  const { rewardItem } = item.dataset;
   const raisedTotal = Number(raisedValue) + Number(value);
   const backersTotal = Number(backers.dataset.backers) + 1;
-  const rewardItem = item.dataset.rewardItem;
+  const progress = raisedTotal >= 100000 ? '100%' : `${(raisedTotal / 100000) * 100}%`;
 
   raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
   raised.dataset.raised = raisedTotal;
-  data[directory].raised = raisedTotal;
+  data.raisedTotal = raisedTotal;
   backers.innerText = backersTotal;
   backers.dataset.backers = backersTotal;
-  data[directory].backers = backersTotal;
+  data.backersTotal = backersTotal;
+  barProgress.style.width = progress;
 
   if (rewardItem !== '0') {
     const selectors = `[data-reward-banner='${rewardItem}'] [data-remaining], [data-reward-item='${rewardItem}'] [data-remaining]`;
@@ -339,5 +322,22 @@ function verifyForm(evt) {
       remaining.dataset.remaining = remainingTotal;
     });
   }
-  localStorage['data'] = JSON.stringify(data);
+  localStorage[directory] = JSON.stringify(data);
+}
+
+updateElementsData();
+function updateElementsData() {
+  const data = getData();
+  const raised = document.querySelector('[data-raised]');
+  const backers = document.querySelector('[data-backers]');
+  const barProgress = document.querySelector('[data-bar-progress]');
+  const { raisedTotal } = data;
+  const { backersTotal } = data;
+  const progress = raisedTotal >= 100000 ? '100%' : `${(raisedTotal / 100000) * 100}%`;
+
+  raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
+  raised.dataset.raised = raisedTotal;
+  backers.innerText = Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(backersTotal);
+  backers.dataset.backers = backersTotal;
+  barProgress.style.width = progress;
 }

@@ -18,28 +18,23 @@
     />
     <link rel="stylesheet" href="dist/css/main.css" />
     <script>
-      const directory = location.pathname.split('/')[1] || 'app';
+      const directory = location.pathname.split('/')[1] || 'crowdfunding';
       const html = document.documentElement;
 
       function getData() {
-        return JSON.parse(localStorage['data']);
+        return JSON.parse(localStorage[directory]);
       }
 
-      if (!localStorage['data']) {
-        localStorage.setItem('data', JSON.stringify({}));
-      }
-
-      if (!getData()[directory]) {
-        const data = getData();
-        data[directory] = {
-          bookmark: false,
-          raised: 89914,
-          backers: 5007,
+      if (!localStorage[directory]) {
+        const data = {
+          bookmarked: false,
+          raisedTotal: 89914,
+          backersTotal: 5007,
         };
-        localStorage['data'] = JSON.stringify(data);
+        localStorage.setItem(directory, JSON.stringify(data));
       }
 
-      const bookmarked = getData()[directory].bookmark;
+      const { bookmarked } = getData();
       html.setAttribute('data-bookmark', bookmarked);
     </script>
     <script src="dist/js/main.js" type="module"></script>
@@ -154,7 +149,7 @@
             </div>
           </div>
           <div class="section__bar">
-            <span class="bar__progress"></span>
+            <span class="bar__progress" data-bar-progress></span>
           </div>
         </section>
         <!-- Section stats end -->
