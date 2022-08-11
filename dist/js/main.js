@@ -294,15 +294,19 @@ function verifyForm(evt) {
   const { value } = numberInput;
   if (value.length === 0 || value === '') return;
 
+  updateProjectData(Number(value));
+  setBannerElementsData();
+  setRewardCardData(item.dataset);
+  return;
+  const { rewardItem } = item.dataset;
   const data = getData();
   const raised = document.querySelector('[data-raised]');
   const backers = document.querySelector('[data-backers]');
   const barProgress = document.querySelector('[data-bar-progress]');
   const raisedValue = raised.dataset.raised;
-  const { rewardItem } = item.dataset;
   const raisedTotal = Number(raisedValue) + Number(value);
   const backersTotal = Number(backers.dataset.backers) + 1;
-  const progress = raisedTotal >= 100000 ? '100%' : `${(raisedTotal / 100000) * 100}%`;
+  // const progress = raisedTotal >= 100000 ? '100%' : `${(raisedTotal / 100000) * 100}%`;
 
   raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
   raised.dataset.raised = raisedTotal;
@@ -325,20 +329,44 @@ function verifyForm(evt) {
   localStorage[directory] = JSON.stringify(data);
 }
 
-updateElementsData();
-function updateElementsData() {
+function updateProjectData(value) {
   const data = getData();
+  const { raisedTotal } = data;
+
+  data.raisedTotal = raisedTotal + value;
+  data.backersTotal++;
+  localStorage[directory] = JSON.stringify(data);
+}
+
+setBannerElementsData(true);
+function setBannerElementsData(init = false) {
+  const data = getData();
+  const { raisedTotal, backersTotal } = data;
   const raised = document.querySelector('[data-raised]');
   const backers = document.querySelector('[data-backers]');
   const barProgress = document.querySelector('[data-bar-progress]');
-  const { raisedTotal } = data;
-  const { backersTotal } = data;
   const progress = raisedTotal >= 100000 ? '100%' : `${(raisedTotal / 100000) * 100}%`;
 
   raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
-  raised.dataset.raised = raisedTotal;
+  // raised.dataset.raised = raisedTotal;
   backers.innerText = Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(backersTotal);
-  backers.dataset.backers = backersTotal;
+  // backers.dataset.backers = backersTotal;
   barProgress.style.width = progress;
+
+  if (!init) return;
+  const items = document.querySelectorAll('[data-reward-item]');
+  items.forEach(item => setRewardCardData(item.dataset));
+}
+
+function setRewardCardData({ rewardItem }) {
+  if (rewardItem === '0') return;
+  const selectors = `[data-reward-banner='${rewardItem}'] [data-remaining], [data-reward-item='${rewardItem}'] [data-remaining]`;
+  const remainings = document.querySelectorAll(selectors);
+  const remainingTotal = Number(remainings[0].dataset.remaining) - 1;
+
+  remainings.forEach(remaining => {
+    remaining.innerText = remainingTotal;
+    remaining.dataset.remaining = remainingTotal;
+  });
 }
 //# sourceMappingURL=main.js.map
