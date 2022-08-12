@@ -307,10 +307,11 @@ function verifyForm(evt) {
   const { value } = numberInput;
   const regex = /^([1-9]\d*)(\.\d{0,2})?$/;
 
-  console.log(regex.test(value));
-  if (!regex.test(value)) return;
+  // console.log(regex.test(value));
+  if (!regex.test(value)) return console.log('Invalid amount!');
+  console.log('Valid amount!')
   const data = getData();
-  updateProjectData(data, Number(value), item.dataset);
+  updateProjectData(data, value, item.dataset);
   setBannerElementsData(data);
   setRewardCardData(data, item.dataset);
 }
@@ -318,18 +319,8 @@ function verifyForm(evt) {
 function updateProjectData(data, value, { rewardItem }) {
   const { raisedTotal, rewards } = data;
   const { remainingTotal } = rewards[rewardItem];
-  // let dotIndex = String(raisedTotal).indexOf('.');
-  // const remainingInteger = Number(String(raisedTotal).slice(0, dotIndex));
-  // const remainingFractional = Number(String(raisedTotal).slice(dotIndex));
-  // dotIndex = String(value).indexOf('.');
-  // const valueInteger = Number(String(value).slice(0, dotIndex));
-  // const valueFractional = Number(String(value).slice(dotIndex));
-  // const fractionalTotal = (remainingFractional * 100 + valueFractional * 100) / 100;
-  // const integerTotal = remainingInteger + valueInteger;
-  // const newRaisedTotal = integerTotal + fractionalTotal;
 
-  // data.raisedTotal = newRaisedTotal;
-  data.raisedTotal = raisedTotal + value;
+  data.raisedTotal = calculateAmounts(raisedTotal, value);
   data.backersTotal++;
   data.rewards[rewardItem].remainingTotal = remainingTotal === 0 ? remainingTotal : remainingTotal - 1;
   localStorage[directory] = JSON.stringify(data);
@@ -349,6 +340,7 @@ function setBannerElementsData(data) {
 
 function setRewardCardData(data, { rewardItem }, disabled) {
   if (rewardItem === '0' || disabled) return;
+
   const selectors = `[data-reward-banner='${rewardItem}'] [data-remaining], [data-reward-item='${rewardItem}'] [data-remaining]`;
   const remainings = document.querySelectorAll(selectors);
   const { remainingTotal } = data.rewards[rewardItem];
@@ -370,5 +362,26 @@ function validateInputValue(evt) {
   if ((!isFinite(key) && key !== '.') || (key === '.' && hasDot) || fractionDigits.length > 2) {
     return evt.preventDefault();
   }
+}
+
+function calculateAmounts(raisedValue, inputValue) {
+  raisedValue = Number(raisedValue).toFixed(2);
+  inputValue = Number(inputValue).toFixed(2);
+
+  let dotIndex = raisedValue.indexOf('.');
+  const raisedInteger = Number(raisedValue.slice(0, dotIndex));
+  const raisedFractional = Number(raisedValue.slice(dotIndex));
+
+  dotIndex = inputValue.indexOf('.');
+  const inputInteger = Number(inputValue.slice(0, dotIndex));
+  const inputFractional = Number(inputValue.slice(dotIndex));
+
+  const integerTotal = raisedInteger + inputInteger;
+  const fractionalTotal = (raisedFractional * 100 + inputFractional * 100) / 100;
+  const total = integerTotal + fractionalTotal;
+  // console.log(raisedInteger, inputInteger, integerTotal);
+  // console.log(raisedFractional, inputFractional, fractionalTotal);
+  // console.log(total);
+  return total;
 }
 //# sourceMappingURL=main.js.map
