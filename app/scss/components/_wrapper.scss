@@ -184,9 +184,16 @@
         border-color: var(--color-cyan-6);
       }
 
-      &.invalid {
-        border-color: red;
+      &.invalid:focus-visible {
+        border-color: var(--color-red);
+        caret-color: var(--color-red);
       }
+    }
+
+    .invalid-pledge {
+      color: var(--color-red);
+      padding-block: 1rem 0;
+      text-align: center;
     }
   }
 

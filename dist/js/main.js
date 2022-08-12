@@ -37,6 +37,7 @@ main.addEventListener('click', checkMainClick);
 main.addEventListener('change', checkMainChange);
 form.addEventListener('submit', verifyForm);
 form.addEventListener('keypress', validateInputValue);
+form.addEventListener('keyup', validateMinValue);
 
 // Event Checkers
 function checkHeaderClick({ target }) {
@@ -278,6 +279,7 @@ function changeModalFocus(evt) {
 function setFocusable(modal) {
   const focusableElements = 'button:not([disabled]), input:not([disabled]):not([tabindex="-1"])';
   const elements = modal.querySelectorAll(focusableElements);
+
   focusable.firstFocusable = elements[0];
   focusable.focusableContent = elements;
   focusable.lastFocusable = elements[elements.length - 1];
@@ -303,13 +305,12 @@ function verifyForm(evt) {
   evt.preventDefault();
   // const { submitter } = evt;
   const { item } = reward;
-  const numberInput = item.querySelector('[data-number]');
-  const { value } = numberInput;
+  const valueInput = item.querySelector('[data-number]');
+  const { value } = valueInput;
   const regex = /^([1-9]\d*)(\.\d{0,2})?$/;
 
-  // console.log(regex.test(value));
-  if (!regex.test(value)) return console.log('Invalid amount!');
-  console.log('Valid amount!')
+  if (!regex.test(value) || !validateMinValue(valueInput)) return;
+  console.log('Valid amount!');
   const data = getData();
   updateProjectData(data, value, item.dataset);
   setBannerElementsData(data);
@@ -327,11 +328,13 @@ function updateProjectData(data, value, { rewardItem }) {
 }
 
 function setBannerElementsData(data) {
-  const { raisedTotal, backersTotal } = data;
   const raised = document.querySelector('[data-raised]');
   const backers = document.querySelector('[data-backers]');
   const barProgress = document.querySelector('[data-bar-progress]');
-  const progress = raisedTotal >= 100000 ? '100%' : `${(raisedTotal / 100000) * 100}%`;
+  const { raisedTotal, backersTotal } = data;
+  const raisedInteger = parseInt(raisedTotal);
+  const goal = 100000;
+  const progress = raisedInteger >= goal ? '100%' : `${(raisedInteger / goal) * 100}%`;
 
   raised.innerText = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(raisedTotal);
   backers.innerText = Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(backersTotal);
@@ -354,34 +357,49 @@ function setRewardCardData(data, { rewardItem }, disabled) {
 function validateInputValue(evt) {
   const {
     key,
+    code,
     target: { value },
   } = evt;
   const hasDot = value.includes(key);
   const fractionDigits = value.slice(value.indexOf('.'));
 
-  if ((!isFinite(key) && key !== '.') || (key === '.' && hasDot) || fractionDigits.length > 2) {
+  if ((!isFinite(key) && key !== '.') || (key === '.' && hasDot) || code === 'Space' || fractionDigits.length > 2) {
     return evt.preventDefault();
   }
 }
 
 function calculateAmounts(raisedValue, inputValue) {
-  raisedValue = Number(raisedValue).toFixed(2);
-  inputValue = Number(inputValue).toFixed(2);
+  raisedValue = Number(raisedValue)
+    .toFixed(2)
+    .split('.')
+    .map((value, index) => (index === 0 ? Number(value) : Number(value) / 100));
+  inputValue = Number(inputValue)
+    .toFixed(2)
+    .split('.')
+    .map((value, index) => (index === 0 ? Number(value) : Number(value) / 100));
 
-  let dotIndex = raisedValue.indexOf('.');
-  const raisedInteger = Number(raisedValue.slice(0, dotIndex));
-  const raisedFractional = Number(raisedValue.slice(dotIndex));
-
-  dotIndex = inputValue.indexOf('.');
-  const inputInteger = Number(inputValue.slice(0, dotIndex));
-  const inputFractional = Number(inputValue.slice(dotIndex));
-
-  const integerTotal = raisedInteger + inputInteger;
-  const fractionalTotal = (raisedFractional * 100 + inputFractional * 100) / 100;
+  const integerTotal = raisedValue[0] + inputValue[0];
+  const fractionalTotal = (raisedValue[1] * 100 + inputValue[1] * 100) / 100;
   const total = integerTotal + fractionalTotal;
-  // console.log(raisedInteger, inputInteger, integerTotal);
-  // console.log(raisedFractional, inputFractional, fractionalTotal);
-  // console.log(total);
+  // console.log(raisedValue, inputValue, integerTotal, fractionalTotal, total);
   return total;
+}
+
+function validateMinValue(evt) {
+  const target = evt.target || evt;
+  const { value, min } = target;
+  const hasInvalid = target.classList.contains('invalid');
+
+  if (parseInt(value) < min || value === '') {
+    if (!hasInvalid) target.classList.add('invalid');
+    console.log('min invalid');
+    return false;
+  }
+
+  if (parseInt(value) >= min) {
+    if (hasInvalid) target.classList.remove('invalid');
+    console.log('min valid');
+    return true;
+  }
 }
 //# sourceMappingURL=main.js.map
