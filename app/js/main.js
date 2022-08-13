@@ -39,6 +39,7 @@ main.addEventListener('click', checkMainClick);
 main.addEventListener('change', checkMainChange);
 form.addEventListener('submit', verifyForm);
 form.addEventListener('keypress', validateKeyPressed);
+form.addEventListener('keydown', removeValueAlerts);
 
 // Event Checkers
 function checkHeaderClick({ target }) {
@@ -179,6 +180,21 @@ function selectedItem(button) {
   rewardSelected(radioInput);
 }
 
+// Sucess Modal
+function openSuccessModal() {
+  toggleActive(successModal);
+  setFocusable(successModal);
+  focusable.firstFocusable.focus();
+  successModal.setAttribute('aria-hidden', false);
+}
+
+function closeSuccessModal() {
+  toggleActive(successModal);
+  setClosing(successModal);
+  focusable.previousFocused.focus();
+  successModal.setAttribute('aria-hidden', true);
+}
+
 // Helpers
 function toggleActive(element) {
   element.classList.toggle('active');
@@ -244,15 +260,16 @@ function resetReward() {
 }
 
 function resetSelectionModal() {
+  const numberInputs = [...document.querySelectorAll('[data-number].invalid')];
+  const errorTexts = [...document.querySelectorAll('[data-invalid-value]:not(.hidden)')];
+
   collapseContainer();
   resetReward();
   form.reset();
+  for (let index = 0; index < numberInputs.length; index++) {
+    removeValueAlerts(numberInputs[index], errorTexts[index]);
+  }
 }
-
-// function setSelectionModalFocus() {
-//   const button = document.querySelector('[data-close-selection]');
-//   button.focus();
-// }
 
 function verifyKeyDown(evt) {
   if (evt.key === 'Tab') return changeModalFocus(evt);
@@ -376,12 +393,6 @@ function validateKeyPressed(evt) {
   if ((!isFinite(key) && key !== '.') || (key === '.' && hasDot) || code === 'Space' || fractionDigits.length > 2) {
     return evt.preventDefault();
   }
-
-  if (target.classList.contains('invalid')) {
-    const errorText = reward.item.querySelector('[data-invalid-value]');
-    errorText.classList.add('hidden');
-    target.classList.remove('invalid');
-  }
 }
 
 function calculateAmounts(raisedValue, inputValue) {
@@ -404,64 +415,56 @@ function validateInputValue(input) {
   const { value } = input;
   const regex = /^([1-9]\d*)(\.\d{0,2})?$/;
   const errorText = reward.item.querySelector('[data-invalid-value]');
-  const hasInvalid = input.classList.contains('invalid');
+
+  if (!regex.test(value) || value === '') {
+    const message = `Enter a valid pledge`;
+    addValueAlerts(input, errorText, message);
+    console.log('invalid pledge');
+    return false;
+  }
 
   if (regex.test(value)) {
-    if (hasInvalid) {
-      errorText.classList.add('hidden');
-      input.classList.remove('invalid');
-      console.log('valid pledge');
-    }
-    return true;
+    removeValueAlerts(input, errorText);
+    console.log('valid pledge');
   }
-
-  if (!hasInvalid) {
-    const { lastElementChild } = errorText;
-    lastElementChild.innerText = `Enter a valid pledge!`;
-    errorText.classList.remove('hidden');
-    input.classList.add('invalid');
-    console.log('invalid pledge');
-  }
-  return false;
+  return true;
 }
 
 function validateMinValue(evt) {
   const target = evt.target || evt;
   const { value, min } = target;
   const errorText = reward.item.querySelector('[data-invalid-value]');
-  const hasInvalid = target.classList.contains('invalid');
 
-  if (parseInt(value) < min || value === '') {
-    if (!hasInvalid) {
-      const { lastElementChild } = errorText;
-      lastElementChild.innerText = `The minimum pledge for this reward is $${min}`;
-      errorText.classList.remove('hidden');
-      target.classList.add('invalid');
-    }
+  if (parseInt(value) < min) {
+    const message = `The minimum pledge for this reward is $${min}`;
+    addValueAlerts(target, errorText, message);
     console.log('invalid min');
     return false;
   }
 
   if (parseInt(value) >= min) {
-    if (hasInvalid) {
-      errorText.classList.add('hidden');
-      target.classList.remove('invalid');
-    }
+    removeValueAlerts(target, errorText);
     console.log('valid min');
-    return true;
   }
+  return true;
 }
 
-function openSuccessModal() {
-  toggleActive(successModal);
-  setFocusable(successModal);
-  focusable.firstFocusable.focus();
-  successModal.setAttribute('aria-hidden', false);
+function addValueAlerts(numberInput, errorText, message) {
+  const hasInvalid = numberInput.classList.contains('invalid');
+  if (hasInvalid) return;
+
+  const { lastElementChild } = errorText;
+  lastElementChild.innerText = message;
+  errorText.classList.remove('hidden');
+  numberInput.classList.add('invalid');
 }
 
-function closeSuccessModal() {
-  toggleActive(successModal);
-  setClosing(successModal);
-  focusable.previousFocused.focus();
-  successModal.setAttribute('aria-hidden', true);
+function removeValueAlerts(numberInput, errorText) {
+  numberInput = numberInput.target || numberInput;
+  const hasInvalid = numberInput.classList.contains('invalid');
+  if (!hasInvalid) return;
+
+  errorText = errorText || reward.item.querySelector('[data-invalid-value]');
+  errorText.classList.add('hidden');
+  numberInput.classList.remove('invalid');
 }
