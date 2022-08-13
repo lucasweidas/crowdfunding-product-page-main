@@ -190,10 +190,18 @@
       }
     }
 
-    .invalid-pledge {
-      color: var(--color-red);
+    .invalid-value {
       padding-block: 1rem 0;
+      color: var(--color-red);
       text-align: center;
+
+      &.hidden {
+        display: none;
+      }
+
+      & > * {
+        display: inline;
+      }
     }
   }
 

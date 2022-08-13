@@ -16,6 +16,7 @@ const header = document.querySelector('[data-header]');
 const nav = document.querySelector('[data-nav]');
 const main = document.querySelector('[data-main]');
 const selectionModal = document.querySelector('[data-modal-selection]');
+const successModal = document.querySelector('[data-modal-success]');
 const form = document.querySelector('[data-form]');
 const reward = {
   item: null,
@@ -29,6 +30,7 @@ const focusable = {
   firstFocusable: null,
   focusableContent: null,
   lastFocusable: null,
+  previousFocused: null,
 };
 
 // Event Listeners
@@ -36,8 +38,7 @@ header.addEventListener('click', checkHeaderClick);
 main.addEventListener('click', checkMainClick);
 main.addEventListener('change', checkMainChange);
 form.addEventListener('submit', verifyForm);
-form.addEventListener('keypress', validateInputValue);
-form.addEventListener('keyup', validateMinValue);
+form.addEventListener('keypress', validateKeyPressed);
 
 // Event Checkers
 function checkHeaderClick({ target }) {
@@ -66,6 +67,10 @@ function checkMainClick({ target }) {
 
   if (target.hasAttribute('data-button-select')) {
     return selectedItem(target);
+  }
+
+  if (target.hasAttribute('data-close-success') || target.hasAttribute('data-modal-success')) {
+    return closeSuccessModal();
   }
 }
 
@@ -120,19 +125,19 @@ function setToggleBookmarkAttributes() {
 // Selection Modal
 function openSelectionModal(button) {
   toggleActive(selectionModal);
-  reward.previousFocused = button;
-  selectionModal.setAttribute('aria-hidden', false);
+  focusable.previousFocused = button;
   document.addEventListener('keydown', verifyKeyDown);
   setFocusable(selectionModal);
+  selectionModal.setAttribute('aria-hidden', false);
 }
 
 function closeSelectionModal() {
-  const { previousFocused } = reward;
+  const { previousFocused } = focusable;
 
   toggleActive(selectionModal);
   setClosing(selectionModal);
-  selectionModal.setAttribute('aria-hidden', true);
   previousFocused.focus();
+  selectionModal.setAttribute('aria-hidden', true);
 }
 
 function rewardSelected(radioInput) {
@@ -185,7 +190,7 @@ function setClosing(element) {
     'animationend',
     () => {
       element.classList.remove('closing');
-      document.removeEventListener('keydown', verifyKeyDown);
+      isActive(successModal) || document.removeEventListener('keydown', verifyKeyDown);
       reward.item && resetSelectionModal();
     },
     { once: true }
@@ -244,10 +249,10 @@ function resetSelectionModal() {
   form.reset();
 }
 
-function setSelectionModalFocus() {
-  const button = document.querySelector('[data-close-selection]');
-  button.focus();
-}
+// function setSelectionModalFocus() {
+//   const button = document.querySelector('[data-close-selection]');
+//   button.focus();
+// }
 
 function verifyKeyDown(evt) {
   if (evt.key === 'Tab') return changeModalFocus(evt);
@@ -257,6 +262,8 @@ function verifyKeyDown(evt) {
   if (isActive(nav)) return toggleMobileMenu();
 
   if (isActive(selectionModal)) return closeSelectionModal();
+
+  if (isActive(successModal)) return closeSuccessModal();
 }
 
 function changeModalFocus(evt) {
@@ -307,14 +314,16 @@ function verifyForm(evt) {
   const { item } = reward;
   const valueInput = item.querySelector('[data-number]');
   const { value } = valueInput;
-  const regex = /^([1-9]\d*)(\.\d{0,2})?$/;
 
-  if (!regex.test(value) || !validateMinValue(valueInput)) return;
+  if (!validateMinValue(valueInput)) return;
+  if (!validateInputValue(valueInput)) return;
   console.log('Valid amount!');
   const data = getData();
   updateProjectData(data, value, item.dataset);
   setBannerElementsData(data);
   setRewardCardData(data, item.dataset);
+  closeSelectionModal();
+  openSuccessModal();
 }
 
 function updateProjectData(data, value, { rewardItem }) {
@@ -354,10 +363,11 @@ function setRewardCardData(data, { rewardItem }, disabled) {
   });
 }
 
-function validateInputValue(evt) {
+function validateKeyPressed(evt) {
   const {
     key,
     code,
+    target,
     target: { value },
   } = evt;
   const hasDot = value.includes(key);
@@ -365,6 +375,12 @@ function validateInputValue(evt) {
 
   if ((!isFinite(key) && key !== '.') || (key === '.' && hasDot) || code === 'Space' || fractionDigits.length > 2) {
     return evt.preventDefault();
+  }
+
+  if (target.classList.contains('invalid')) {
+    const errorText = reward.item.querySelector('[data-invalid-value]');
+    errorText.classList.add('hidden');
+    target.classList.remove('invalid');
   }
 }
 
@@ -381,25 +397,72 @@ function calculateAmounts(raisedValue, inputValue) {
   const integerTotal = raisedValue[0] + inputValue[0];
   const fractionalTotal = (raisedValue[1] * 100 + inputValue[1] * 100) / 100;
   const total = integerTotal + fractionalTotal;
-  // console.log(raisedValue, inputValue, integerTotal, fractionalTotal, total);
   return total;
+}
+
+function validateInputValue(input) {
+  const { value } = input;
+  const regex = /^([1-9]\d*)(\.\d{0,2})?$/;
+  const errorText = reward.item.querySelector('[data-invalid-value]');
+  const hasInvalid = input.classList.contains('invalid');
+
+  if (regex.test(value)) {
+    if (hasInvalid) {
+      errorText.classList.add('hidden');
+      input.classList.remove('invalid');
+      console.log('valid pledge');
+    }
+    return true;
+  }
+
+  if (!hasInvalid) {
+    const { lastElementChild } = errorText;
+    lastElementChild.innerText = `Enter a valid pledge!`;
+    errorText.classList.remove('hidden');
+    input.classList.add('invalid');
+    console.log('invalid pledge');
+  }
+  return false;
 }
 
 function validateMinValue(evt) {
   const target = evt.target || evt;
   const { value, min } = target;
+  const errorText = reward.item.querySelector('[data-invalid-value]');
   const hasInvalid = target.classList.contains('invalid');
 
   if (parseInt(value) < min || value === '') {
-    if (!hasInvalid) target.classList.add('invalid');
-    console.log('min invalid');
+    if (!hasInvalid) {
+      const { lastElementChild } = errorText;
+      lastElementChild.innerText = `The minimum pledge for this reward is $${min}`;
+      errorText.classList.remove('hidden');
+      target.classList.add('invalid');
+    }
+    console.log('invalid min');
     return false;
   }
 
   if (parseInt(value) >= min) {
-    if (hasInvalid) target.classList.remove('invalid');
-    console.log('min valid');
+    if (hasInvalid) {
+      errorText.classList.add('hidden');
+      target.classList.remove('invalid');
+    }
+    console.log('valid min');
     return true;
   }
+}
+
+function openSuccessModal() {
+  toggleActive(successModal);
+  setFocusable(successModal);
+  focusable.firstFocusable.focus();
+  successModal.setAttribute('aria-hidden', false);
+}
+
+function closeSuccessModal() {
+  toggleActive(successModal);
+  setClosing(successModal);
+  focusable.previousFocused.focus();
+  successModal.setAttribute('aria-hidden', true);
 }
 //# sourceMappingURL=main.js.map

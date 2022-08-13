@@ -28,7 +28,7 @@
       if (!localStorage[directory]) {
         const data = {
           bookmarked: false,
-          raisedTotal: 89914.00,
+          raisedTotal: 89914.0,
           backersTotal: 5007,
           rewards: [{ remainingTotal: 0 }, { remainingTotal: 101 }, { remainingTotal: 64 }, { remainingTotal: 0 }],
         };
@@ -272,7 +272,10 @@
                             </label>
                             <input class="button--continue" data-submit="form-number-0" type="submit" value="Continue" disabled />
                           </div>
-                          <span class="paragraph invalid-pledge"><i class="fa-solid fa-triangle-exclamation"></i> The minimum pledge for this reward is $25</span>
+                          <span class="paragraph invalid-value hidden" data-invalid-value>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span class="text-error">The minimum pledge for this reward is $1</span>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -304,6 +307,10 @@
                             </label>
                             <input class="button--continue" data-submit="form-number-1" type="submit" value="Continue" disabled />
                           </div>
+                          <span class="paragraph invalid-value hidden" data-invalid-value>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span class="text-error">The minimum pledge for this reward is $25</span>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -335,6 +342,10 @@
                             </label>
                             <input class="button--continue" data-submit="form-number-2" type="submit" value="Continue" disabled />
                           </div>
+                          <span class="paragraph invalid-value hidden" data-invalid-value>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span class="text-error">The minimum pledge for this reward is $75</span>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -366,6 +377,10 @@
                             </label>
                             <input class="button--continue" data-submit="form-number-3" type="submit" value="Continue" disabled />
                           </div>
+                          <span class="paragraph invalid-value hidden" data-invalid-value>
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span class="text-error">The minimum pledge for this reward is $200</span>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -392,7 +407,7 @@
             <p class="paragraph">
               Your pledge brings us one step closer to sharing Mastercraft Bamboo Monitor Riser worldwide. You will get an email once our campaign is completed.
             </p>
-            <button class="button--understood">Got it!</button>
+            <button class="button--understood" data-close-success>Got it!</button>
           </section>
         </div>
         <!-- Success modal end -->
