@@ -1,16 +1,3 @@
-// Initializer
-(() => {
-  const data = getData();
-  const items = document.querySelectorAll('[data-reward-item]');
-
-  setToggleBookmarkAttributes(data);
-  setBannerElementsData(data);
-  items.forEach(item => {
-    const disabled = item.classList.contains('disabled');
-    setRewardCardData(data, item.dataset, disabled);
-  });
-})();
-
 // Global Variables
 const header = document.querySelector('[data-header]');
 const nav = document.querySelector('[data-nav]');
@@ -23,7 +10,6 @@ const reward = {
   container: null,
   content: null,
   contentHeight: 0,
-  previousFocused: null,
 };
 const observer = new ResizeObserver(verifyContentResize);
 const focusable = {
@@ -32,6 +18,16 @@ const focusable = {
   lastFocusable: null,
   previousFocused: null,
 };
+
+// Initializer
+(() => {
+  const data = getData();
+  const items = document.querySelectorAll('[data-reward-item]');
+
+  setToggleBookmarkAttributes(data);
+  setBannerElementsData(data);
+  items.forEach(item => setRewardCardData(data, item));
+})();
 
 // Event Listeners
 header.addEventListener('click', checkHeaderClick);
@@ -260,8 +256,8 @@ function resetReward() {
 }
 
 function resetSelectionModal() {
-  const numberInputs = [...document.querySelectorAll('[data-number].invalid')];
-  const errorTexts = [...document.querySelectorAll('[data-invalid-value]:not(.hidden)')];
+  const numberInputs = document.querySelectorAll('[data-number].invalid');
+  const errorTexts = document.querySelectorAll('[data-invalid-value]:not(.hidden)');
 
   collapseContainer();
   resetReward();
@@ -300,9 +296,9 @@ function changeModalFocus(evt) {
   }
 }
 
-function setFocusable(modal) {
+function setFocusable(element) {
   const focusableElements = 'button:not([disabled]), input:not([disabled]):not([tabindex="-1"])';
-  const elements = modal.querySelectorAll(focusableElements);
+  const elements = element.querySelectorAll(focusableElements);
 
   focusable.firstFocusable = elements[0];
   focusable.focusableContent = elements;
@@ -327,7 +323,7 @@ function isActive(element) {
 
 function verifyForm(evt) {
   evt.preventDefault();
-  // const { submitter } = evt;
+
   const { item } = reward;
   const valueInput = item.querySelector('[data-number]');
   const { value } = valueInput;
@@ -338,7 +334,7 @@ function verifyForm(evt) {
   const data = getData();
   updateProjectData(data, value, item.dataset);
   setBannerElementsData(data);
-  setRewardCardData(data, item.dataset);
+  setRewardCardData(data, item);
   closeSelectionModal();
   openSuccessModal();
 }
@@ -349,7 +345,7 @@ function updateProjectData(data, value, { rewardItem }) {
 
   data.raisedTotal = calculateAmounts(raisedTotal, value);
   data.backersTotal++;
-  data.rewards[rewardItem].remainingTotal = remainingTotal === 0 ? remainingTotal : remainingTotal - 1;
+  data.rewards[rewardItem].remainingTotal = remainingTotal <= 0 ? remainingTotal : remainingTotal - 1;
   localStorage[directory] = JSON.stringify(data);
 }
 
@@ -367,8 +363,9 @@ function setBannerElementsData(data) {
   barProgress.style.width = progress;
 }
 
-function setRewardCardData(data, { rewardItem }, disabled) {
-  if (rewardItem === '0' || disabled) return;
+function setRewardCardData(data, item) {
+  const { rewardItem } = item.dataset;
+  if (rewardItem === '0') return;
 
   const selectors = `[data-reward-banner='${rewardItem}'] [data-remaining], [data-reward-item='${rewardItem}'] [data-remaining]`;
   const remainings = document.querySelectorAll(selectors);
@@ -376,15 +373,32 @@ function setRewardCardData(data, { rewardItem }, disabled) {
 
   remainings.forEach(remaining => {
     remaining.innerText = remainingTotal;
-    remaining.dataset.remaining = remainingTotal;
+
+    const disabled = item.classList.contains('disabled');
+    if (remainingTotal <= 0 && !disabled) disableRewardCard(item, rewardItem);
   });
+}
+
+function disableRewardCard(item, rewardItem) {
+  const banner = document.querySelector(`[data-reward-banner='${rewardItem}']`);
+
+  item.classList.add('disabled');
+  banner.classList.add('disabled');
+  setFocusable(banner);
+  focusable.focusableContent.forEach(element => {
+    if (element.hasAttribute('data-button-select')) {
+      element.innerText = 'Out of Stock';
+    }
+    element.toggleAttribute('disabled');
+  });
+  setFocusable(item);
+  focusable.focusableContent.forEach(element => element.toggleAttribute('disabled'));
 }
 
 function validateKeyPressed(evt) {
   const {
     key,
     code,
-    target,
     target: { value },
   } = evt;
   const hasDot = value.includes(key);
@@ -430,20 +444,19 @@ function validateInputValue(input) {
   return true;
 }
 
-function validateMinValue(evt) {
-  const target = evt.target || evt;
-  const { value, min } = target;
+function validateMinValue(input) {
+  const { value, min } = input;
   const errorText = reward.item.querySelector('[data-invalid-value]');
 
   if (parseInt(value) < min) {
     const message = `The minimum pledge for this reward is $${min}`;
-    addValueAlerts(target, errorText, message);
+    addValueAlerts(input, errorText, message);
     console.log('invalid min');
     return false;
   }
 
   if (parseInt(value) >= min) {
-    removeValueAlerts(target, errorText);
+    removeValueAlerts(input, errorText);
     console.log('valid min');
   }
   return true;
