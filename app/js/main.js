@@ -385,10 +385,9 @@ function disableRewardCard(item, rewardItem) {
   banner.classList.add('disabled');
   setFocusable(banner);
   focusable.focusableContent.forEach(element => {
-    if (element.hasAttribute('data-button-select')) {
-      element.innerText = 'Out of Stock';
-    }
     element.toggleAttribute('disabled');
+    if (!element.hasAttribute('data-button-select')) return;
+    element.innerText = 'Out of Stock';
   });
   setFocusable(item);
   focusable.focusableContent.forEach(element => element.toggleAttribute('disabled'));
@@ -398,30 +397,54 @@ function setFormInputsEvents(form) {
   const events = ['input', 'keydown', 'keyup'];
 
   events.forEach(event => {
-    form.addEventListener(event, ({ target }) => {
-      filterInputValue(target, /^\d*\.?\d{0,2}$/) && removeValueAlerts(target);
+    form.addEventListener(event, evt => {
+      const { target } = evt;
+      if (target.type !== 'text') return;
+      if (!filterInputValue(target, /^\d*\.?\d{0,2}$/)) return;
+      // target.value = toCurrencyFormat(target.value);
+      removeValueAlerts(target);
+      // filterInputValue(target, /^\d*\.?\d{0,2}$/) && removeValueAlerts(target);
     });
   });
 }
 
 function filterInputValue(input, filter) {
+  const value = toDecimalFormat(input.value);
+  console.log(filter.test(value));
   console.log('Start');
-  if (filter.test(input.value)) {
-    input.oldValue = input.value;
+  if (filter.test(value)) {
+    input.oldValue = value;
+    // input.value = toCurrencyFormat(value);
     input.oldSelectionStart = input.selectionStart;
     input.oldSelectionEnd = input.selectionEnd;
-    console.log('1');
+    // console.log('1');
     return true;
   } else if (input.hasOwnProperty('oldValue')) {
     input.value = input.oldValue;
+    // input.value = toCurrencyFormat(input.oldValue);
     input.setSelectionRange(input.oldSelectionStart, input.oldSelectionEnd);
-    console.log('2');
+    // console.log('2');
     return true;
   } else {
     input.value = '';
-    console.log('3');
+    // console.log('3');
     return false;
   }
+}
+
+function toCurrencyFormat(value) {
+  console.log('currency', value);
+  value = Number(toDecimalFormat(value));
+  const formattedValue = value.toLocaleString('en-US', { maximumFractionDigits: 2 });
+  console.log('currency formatted', formattedValue);
+  return formattedValue;
+}
+
+function toDecimalFormat(value) {
+  // console.log('decimal', value);
+  value = value.replace(/,/g, '');
+  // console.log('decimal formatted', value);
+  return value;
 }
 
 function calculateAmounts(raisedValue, inputValue) {
