@@ -34,8 +34,7 @@ header.addEventListener('click', checkHeaderClick);
 main.addEventListener('click', checkMainClick);
 main.addEventListener('change', checkMainChange);
 form.addEventListener('submit', verifyForm);
-form.addEventListener('keypress', validateKeyPressed);
-form.addEventListener('keydown', removeValueAlerts);
+setFormInputsEvents(form);
 
 // Event Checkers
 function checkHeaderClick({ target }) {
@@ -395,17 +394,33 @@ function disableRewardCard(item, rewardItem) {
   focusable.focusableContent.forEach(element => element.toggleAttribute('disabled'));
 }
 
-function validateKeyPressed(evt) {
-  const {
-    key,
-    code,
-    target: { value },
-  } = evt;
-  const hasDot = value.includes(key);
-  const fractionDigits = value.slice(value.indexOf('.'));
+function setFormInputsEvents(form) {
+  const events = ['input', 'keydown', 'keyup'];
 
-  if ((!isFinite(key) && key !== '.') || (key === '.' && hasDot) || code === 'Space' || fractionDigits.length > 2) {
-    return evt.preventDefault();
+  events.forEach(event => {
+    form.addEventListener(event, ({ target }) => {
+      filterInputValue(target, /^\d*\.?\d{0,2}$/) && removeValueAlerts(target);
+    });
+  });
+}
+
+function filterInputValue(input, filter) {
+  console.log('Start');
+  if (filter.test(input.value)) {
+    input.oldValue = input.value;
+    input.oldSelectionStart = input.selectionStart;
+    input.oldSelectionEnd = input.selectionEnd;
+    console.log('1');
+    return true;
+  } else if (input.hasOwnProperty('oldValue')) {
+    input.value = input.oldValue;
+    input.setSelectionRange(input.oldSelectionStart, input.oldSelectionEnd);
+    console.log('2');
+    return true;
+  } else {
+    input.value = '';
+    console.log('3');
+    return false;
   }
 }
 
@@ -426,21 +441,18 @@ function calculateAmounts(raisedValue, inputValue) {
 }
 
 function validateInputValue(input) {
-  const { value } = input;
-  const regex = /^([1-9]\d*)(\.\d{0,2})?$/;
   const errorText = reward.item.querySelector('[data-invalid-value]');
+  const isValid = filterInputValue(input, /^\d*\.?\d{0,2}$/);
 
-  if (!regex.test(value) || value === '') {
+  if (!isValid || input.value === '') {
     const message = `Enter a valid pledge`;
     addValueAlerts(input, errorText, message);
     console.log('invalid pledge');
     return false;
   }
 
-  if (regex.test(value)) {
-    removeValueAlerts(input, errorText);
-    console.log('valid pledge');
-  }
+  removeValueAlerts(input, errorText);
+  console.log('valid pledge');
   return true;
 }
 
@@ -455,10 +467,8 @@ function validateMinValue(input) {
     return false;
   }
 
-  if (parseInt(value) >= min) {
-    removeValueAlerts(input, errorText);
-    console.log('valid min');
-  }
+  removeValueAlerts(input, errorText);
+  console.log('valid min');
   return true;
 }
 
