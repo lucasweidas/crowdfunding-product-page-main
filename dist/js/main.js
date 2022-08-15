@@ -327,8 +327,8 @@ function verifyForm(evt) {
   const valueInput = item.querySelector('[data-number]');
   const { value } = valueInput;
 
-  if (!validateMinValue(valueInput)) return;
   if (!validateInputValue(valueInput)) return;
+  if (!validateMinValue(valueInput)) return;
   console.log('Valid amount!');
   const data = getData();
   updateProjectData(data, value, item.dataset);
@@ -397,54 +397,28 @@ function setFormInputsEvents(form) {
   const events = ['input', 'keydown', 'keyup'];
 
   events.forEach(event => {
-    form.addEventListener(event, evt => {
-      const { target } = evt;
+    form.addEventListener(event, ({ target }) => {
       if (target.type !== 'text') return;
-      if (!filterInputValue(target, /^\d*\.?\d{0,2}$/)) return;
-      // target.value = toCurrencyFormat(target.value);
+      filterInputValue(target, /^\d*\.?\d{0,2}$/);
       removeValueAlerts(target);
-      // filterInputValue(target, /^\d*\.?\d{0,2}$/) && removeValueAlerts(target);
     });
   });
 }
 
 function filterInputValue(input, filter) {
-  const value = toDecimalFormat(input.value);
-  console.log(filter.test(value));
-  console.log('Start');
-  if (filter.test(value)) {
-    input.oldValue = value;
-    // input.value = toCurrencyFormat(value);
+  if (filter.test(input.value)) {
+    input.oldValue = input.value;
     input.oldSelectionStart = input.selectionStart;
     input.oldSelectionEnd = input.selectionEnd;
-    // console.log('1');
-    return true;
+    console.log('1');
   } else if (input.hasOwnProperty('oldValue')) {
     input.value = input.oldValue;
-    // input.value = toCurrencyFormat(input.oldValue);
     input.setSelectionRange(input.oldSelectionStart, input.oldSelectionEnd);
-    // console.log('2');
-    return true;
+    console.log('2');
   } else {
     input.value = '';
-    // console.log('3');
-    return false;
+    console.log('3');
   }
-}
-
-function toCurrencyFormat(value) {
-  console.log('currency', value);
-  value = Number(toDecimalFormat(value));
-  const formattedValue = value.toLocaleString('en-US', { maximumFractionDigits: 2 });
-  console.log('currency formatted', formattedValue);
-  return formattedValue;
-}
-
-function toDecimalFormat(value) {
-  // console.log('decimal', value);
-  value = value.replace(/,/g, '');
-  // console.log('decimal formatted', value);
-  return value;
 }
 
 function calculateAmounts(raisedValue, inputValue) {
@@ -465,9 +439,11 @@ function calculateAmounts(raisedValue, inputValue) {
 
 function validateInputValue(input) {
   const errorText = reward.item.querySelector('[data-invalid-value]');
-  const isValid = filterInputValue(input, /^\d*\.?\d{0,2}$/);
+  let filter = /^0{1,2}(\.\d{0,2})?$/;
+  if (filter.test(input.value)) return true;
 
-  if (!isValid || input.value === '') {
+  filter = /^((([1-9]\d*)(\.\d{0,2})?)|(\.\d{1,2}))$/;
+  if (!filter.test(input.value)) {
     const message = `Enter a valid pledge`;
     addValueAlerts(input, errorText, message);
     console.log('invalid pledge');
@@ -483,7 +459,7 @@ function validateMinValue(input) {
   const { value, min } = input;
   const errorText = reward.item.querySelector('[data-invalid-value]');
 
-  if (parseInt(value) < min) {
+  if (Number(value) < min) {
     const message = `The minimum pledge for this reward is $${min}`;
     addValueAlerts(input, errorText, message);
     console.log('invalid min');
