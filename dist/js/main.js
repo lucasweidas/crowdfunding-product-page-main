@@ -393,16 +393,81 @@ function disableRewardCard(item, rewardItem) {
   focusable.focusableContent.forEach(element => element.toggleAttribute('disabled'));
 }
 
+// function setFormInputsEvents(form) {
+//   const events = ['input', 'keydown', 'keyup'];
+
+//   events.forEach(event => {
+//     form.addEventListener(event, ({ target }) => {
+//       if (target.type !== 'text') return;
+//       filterInputValue(target, /^\d*\.?\d{0,2}$/);
+//       removeValueAlerts(target);
+//     });
+//   });
+// }
+
+// function filterInputValue(input, filter) {
+//   if (filter.test(input.value)) {
+//     input.oldValue = input.value;
+//     input.oldSelectionStart = input.selectionStart;
+//     input.oldSelectionEnd = input.selectionEnd;
+//     console.log('1');
+//   } else if (input.hasOwnProperty('oldValue')) {
+//     input.value = input.oldValue;
+//     input.setSelectionRange(input.oldSelectionStart, input.oldSelectionEnd);
+//     console.log('2');
+//   } else {
+//     input.value = '';
+//     console.log('3');
+//   }
+// }
+
 function setFormInputsEvents(form) {
-  const events = ['input', 'keydown', 'keyup'];
+  // const events = ['input', 'keydown', 'keyup'];
+  const events = ['input'];
 
   events.forEach(event => {
-    form.addEventListener(event, ({ target }) => {
-      if (target.type !== 'text') return;
-      filterInputValue(target, /^\d*\.?\d{0,2}$/);
-      removeValueAlerts(target);
-    });
+    form.addEventListener(event, selectInputEvent);
   });
+
+  // form.addEventListener('blur', selectInputEvent);
+  // form.addEventListener('focus', selectInputEvent);
+}
+
+function selectInputEvent(evt) {
+  const { target } = evt;
+  console.log(evt);
+  if (target.type === 'radio' && !reward.item) {
+    toggleTabindex(target);
+    rewardSelected(target);
+    const valueInput = reward.item.querySelector('[data-number]');
+    console.log(valueInput);
+    valueInput.addEventListener('blur', ({ target }) => {
+      console.log(evt);
+      target.value = toCurrency(target.value);
+    });
+    valueInput.addEventListener('focus', ({ target }) => {
+      console.log(evt);
+      target.value = removeCommas(target.value);
+    });
+    return;
+  }
+  if (target.type !== 'text') return;
+  // if (evt.type === 'blur') {
+  //   console.log(evt.type, valueInput);
+  //   target.value = toCurrency(valueInput.value);
+  //   return;
+  // }
+  // if (evt.type === 'focus') {
+  //   console.log(evt.type);
+  //   target.value = removeCommas(valueInput.value);
+  //   return;
+  // }
+  if (evt.type === 'input') {
+    console.log(evt.type);
+    const filter = /^\d*(\.\d{0,2})?$/;
+    filterInputValue(target, filter);
+    removeValueAlerts(target);
+  }
 }
 
 function filterInputValue(input, filter) {
@@ -410,15 +475,35 @@ function filterInputValue(input, filter) {
     input.oldValue = input.value;
     input.oldSelectionStart = input.selectionStart;
     input.oldSelectionEnd = input.selectionEnd;
-    console.log('1');
+    // console.log("1");
   } else if (input.hasOwnProperty('oldValue')) {
     input.value = input.oldValue;
     input.setSelectionRange(input.oldSelectionStart, input.oldSelectionEnd);
-    console.log('2');
+    // console.log("2");
   } else {
     input.value = '';
-    console.log('3');
+    // console.log("3");
   }
+}
+
+function toCurrency(value) {
+  if (!value.length || value === '.') return value;
+  const minimum = /\./.test(value) ? value.split('.')[1].length : 0;
+  // const formatter = new Intl.NumberFormat('en-US', {
+  //   minimumFractionDigits: minimum,
+  // });
+  // const formattedValue = formatter.format(Number(removeCommas(value)));
+  const formattedValue = Intl.NumberFormat('en-US', {
+    minimumFractionDigits: minimum,
+  }).format(Number(removeCommas(value)));
+
+  return formattedValue;
+  // return /\.$/.test(value) ? `${formattedValue}.` : formattedValue;
+}
+
+function removeCommas(value) {
+  console.log(typeof value, value);
+  return value.replace(/,/g, '');
 }
 
 function calculateAmounts(raisedValue, inputValue) {
