@@ -4,7 +4,7 @@ const nav = document.querySelector('[data-nav]');
 const main = document.querySelector('[data-main]');
 const selectionModal = document.querySelector('[data-modal-selection]');
 const successModal = document.querySelector('[data-modal-success]');
-const form = document.querySelector('[data-form]');
+const selectionForm = document.querySelector('[data-form]');
 const reward = {
   item: null,
   container: null,
@@ -33,8 +33,8 @@ const focusable = {
 header.addEventListener('click', checkHeaderClick);
 main.addEventListener('click', checkMainClick);
 main.addEventListener('change', checkMainChange);
-form.addEventListener('submit', verifyForm);
-setFormInputsEvents(form);
+selectionForm.addEventListener('submit', verifyForm);
+setFormFilterEvents(selectionForm);
 
 // Event Checkers
 function checkHeaderClick({ target }) {
@@ -72,7 +72,7 @@ function checkMainClick({ target }) {
 
 function checkMainChange({ target }) {
   if (target.hasAttribute('data-reward-radio')) {
-    toggleTabindex(target);
+    // toggleTabindex(target);
     rewardSelected(target);
     return;
   }
@@ -137,9 +137,11 @@ function closeSelectionModal() {
 }
 
 function rewardSelected(radioInput) {
+  toggleTabindex(radioInput);
   reward.item && collapseContainer();
   setReward(radioInput);
   expandContainer();
+  addFormInputsEvents(reward.item.querySelector('[data-number]'));
 }
 
 function setReward(radioInput) {
@@ -168,7 +170,7 @@ function selectedItem(button) {
   const item = document.querySelector(`[data-reward-item='${value}']`);
   const radioInput = item.querySelector('[data-reward-radio]');
 
-  toggleTabindex(radioInput);
+  // toggleTabindex(radioInput);
   openSelectionModal(button);
   radioInput.checked = true;
   radioInput.focus();
@@ -260,7 +262,8 @@ function resetSelectionModal() {
 
   collapseContainer();
   resetReward();
-  form.reset();
+  selectionForm.reset();
+  removeFormInputsEvents();
   for (let index = 0; index < numberInputs.length; index++) {
     removeValueAlerts(numberInputs[index], errorTexts[index]);
   }
@@ -305,7 +308,7 @@ function setFocusable(element) {
 }
 
 function toggleTabindex(target) {
-  const radios = [...form.querySelectorAll('[data-reward-radio]')];
+  const radios = [...selectionForm.querySelectorAll('[data-reward-radio]')];
   target = target || radios[0];
 
   radios.forEach(radio => {
@@ -325,10 +328,10 @@ function verifyForm(evt) {
 
   const { item } = reward;
   const valueInput = item.querySelector('[data-number]');
-  const { value } = valueInput;
+  const value = removeCommas(valueInput.value);
 
-  if (!validateInputValue(valueInput)) return;
-  if (!validateMinValue(valueInput)) return;
+  if (!validateInputValue(valueInput, value)) return;
+  if (!validateMinValue(valueInput, value)) return;
   console.log('Valid amount!');
   const data = getData();
   updateProjectData(data, value, item.dataset);
@@ -393,80 +396,47 @@ function disableRewardCard(item, rewardItem) {
   focusable.focusableContent.forEach(element => element.toggleAttribute('disabled'));
 }
 
-// function setFormInputsEvents(form) {
-//   const events = ['input', 'keydown', 'keyup'];
-
-//   events.forEach(event => {
-//     form.addEventListener(event, ({ target }) => {
-//       if (target.type !== 'text') return;
-//       filterInputValue(target, /^\d*\.?\d{0,2}$/);
-//       removeValueAlerts(target);
-//     });
-//   });
-// }
-
-// function filterInputValue(input, filter) {
-//   if (filter.test(input.value)) {
-//     input.oldValue = input.value;
-//     input.oldSelectionStart = input.selectionStart;
-//     input.oldSelectionEnd = input.selectionEnd;
-//     console.log('1');
-//   } else if (input.hasOwnProperty('oldValue')) {
-//     input.value = input.oldValue;
-//     input.setSelectionRange(input.oldSelectionStart, input.oldSelectionEnd);
-//     console.log('2');
-//   } else {
-//     input.value = '';
-//     console.log('3');
-//   }
-// }
-
-function setFormInputsEvents(form) {
+function setFormFilterEvents(form) {
   // const events = ['input', 'keydown', 'keyup'];
   const events = ['input'];
 
   events.forEach(event => {
-    form.addEventListener(event, selectInputEvent);
+    form.addEventListener(event, verifySelectionFormEvents);
   });
-
-  // form.addEventListener('blur', selectInputEvent);
-  // form.addEventListener('focus', selectInputEvent);
 }
 
-function selectInputEvent(evt) {
-  const { target } = evt;
-  console.log(evt);
-  if (target.type === 'radio' && !reward.item) {
-    toggleTabindex(target);
-    rewardSelected(target);
-    const valueInput = reward.item.querySelector('[data-number]');
-    console.log(valueInput);
-    valueInput.addEventListener('blur', ({ target }) => {
-      console.log(evt);
-      target.value = toCurrency(target.value);
-    });
-    valueInput.addEventListener('focus', ({ target }) => {
-      console.log(evt);
-      target.value = removeCommas(target.value);
-    });
+function addFormInputsEvents(input) {
+  input.addEventListener('blur', formInputEvents);
+  input.addEventListener('focus', formInputEvents);
+}
+
+function removeFormInputsEvents() {
+  const valueInputs = document.querySelectorAll('[data-number]');
+
+  valueInputs.forEach(input => {
+    input.removeEventListener('blur', formInputEvents);
+    input.removeEventListener('focus', formInputEvents);
+  });
+}
+
+function verifySelectionFormEvents({ target, type }) {
+  // console.log('verify:', type);
+  if (target.type !== 'text' || type !== 'input') return;
+
+  // console.log('valid:', type);
+  const filter = /^\d*(\.\d{0,2})?$/;
+  filterInputValue(target, filter) && removeValueAlerts(target);
+}
+
+function formInputEvents({ target, type }) {
+  // console.log(evt);
+  if (type === 'blur') {
+    target.value = toCurrency(target.value);
     return;
   }
-  if (target.type !== 'text') return;
-  // if (evt.type === 'blur') {
-  //   console.log(evt.type, valueInput);
-  //   target.value = toCurrency(valueInput.value);
-  //   return;
-  // }
-  // if (evt.type === 'focus') {
-  //   console.log(evt.type);
-  //   target.value = removeCommas(valueInput.value);
-  //   return;
-  // }
-  if (evt.type === 'input') {
-    console.log(evt.type);
-    const filter = /^\d*(\.\d{0,2})?$/;
-    filterInputValue(target, filter);
-    removeValueAlerts(target);
+  if (type === 'focus') {
+    target.value = removeCommas(target.value);
+    return;
   }
 }
 
@@ -476,45 +446,41 @@ function filterInputValue(input, filter) {
     input.oldSelectionStart = input.selectionStart;
     input.oldSelectionEnd = input.selectionEnd;
     // console.log("1");
+    return true;
   } else if (input.hasOwnProperty('oldValue')) {
     input.value = input.oldValue;
     input.setSelectionRange(input.oldSelectionStart, input.oldSelectionEnd);
     // console.log("2");
+    return false;
   } else {
     input.value = '';
     // console.log("3");
+    return false;
   }
 }
 
 function toCurrency(value) {
-  if (!value.length || value === '.') return value;
+  const regex = /^(?![\s\S])|^\.\d{0,2}?$/;
+  if (regex.test(value)) return value;
+
   const minimum = /\./.test(value) ? value.split('.')[1].length : 0;
-  // const formatter = new Intl.NumberFormat('en-US', {
-  //   minimumFractionDigits: minimum,
-  // });
-  // const formattedValue = formatter.format(Number(removeCommas(value)));
   const formattedValue = Intl.NumberFormat('en-US', {
     minimumFractionDigits: minimum,
   }).format(Number(removeCommas(value)));
 
-  return formattedValue;
-  // return /\.$/.test(value) ? `${formattedValue}.` : formattedValue;
+  return /\.$/.test(value) ? `${formattedValue}.` : formattedValue;
+  // return formattedValue;
 }
 
 function removeCommas(value) {
-  console.log(typeof value, value);
+  // console.log(typeof value, value);
   return value.replace(/,/g, '');
 }
 
 function calculateAmounts(raisedValue, inputValue) {
-  raisedValue = Number(raisedValue)
-    .toFixed(2)
-    .split('.')
-    .map((value, index) => (index === 0 ? Number(value) : Number(value) / 100));
-  inputValue = Number(inputValue)
-    .toFixed(2)
-    .split('.')
-    .map((value, index) => (index === 0 ? Number(value) : Number(value) / 100));
+  raisedValue = getIntergerAndFractionalDigits(raisedValue);
+  inputValue = getIntergerAndFractionalDigits(removeCommas(inputValue));
+  // console.log(raisedValue, inputValue);
 
   const integerTotal = raisedValue[0] + inputValue[0];
   const fractionalTotal = (raisedValue[1] * 100 + inputValue[1] * 100) / 100;
@@ -522,57 +488,53 @@ function calculateAmounts(raisedValue, inputValue) {
   return total;
 }
 
-function validateInputValue(input) {
-  const errorText = reward.item.querySelector('[data-invalid-value]');
-  let filter = /^0{1,2}(\.\d{0,2})?$/;
-  if (filter.test(input.value)) return true;
-
-  filter = /^((([1-9]\d*)(\.\d{0,2})?)|(\.\d{1,2}))$/;
-  if (!filter.test(input.value)) {
-    const message = `Enter a valid pledge`;
-    addValueAlerts(input, errorText, message);
-    console.log('invalid pledge');
-    return false;
-  }
-
-  removeValueAlerts(input, errorText);
-  console.log('valid pledge');
-  return true;
+function getIntergerAndFractionalDigits(value) {
+  return Number(value)
+    .toFixed(2)
+    .split('.')
+    .map((value, index) => (index === 0 ? Number(value) : Number(value) / 100));
 }
 
-function validateMinValue(input) {
-  const { value, min } = input;
+function validateInputValue(input, value) {
+  const filter = /^0{1,2}(\.\d{0,2})?$/;
+  const filter2 = /^(?![\s\S])|^\.$/;
+  if (filter.test(value) || !filter2.test(value)) return true;
+
   const errorText = reward.item.querySelector('[data-invalid-value]');
-
-  if (Number(value) < min) {
-    const message = `The minimum pledge for this reward is $${min}`;
-    addValueAlerts(input, errorText, message);
-    console.log('invalid min');
-    return false;
-  }
-
-  removeValueAlerts(input, errorText);
-  console.log('valid min');
-  return true;
+  const message = `Enter a valid pledge`;
+  addValueAlerts(input, errorText, message);
+  console.log('invalid pledge');
+  return false;
 }
 
-function addValueAlerts(numberInput, errorText, message) {
-  const hasInvalid = numberInput.classList.contains('invalid');
+function validateMinValue(input, value) {
+  const { min } = input;
+  if (value >= min) return true;
+
+  const errorText = reward.item.querySelector('[data-invalid-value]');
+  const message = `The minimum pledge for this reward is $${min}`;
+  addValueAlerts(input, errorText, message);
+  console.log('invalid min');
+  return false;
+}
+
+function addValueAlerts(input, errorText, message) {
+  const hasInvalid = input.classList.contains('invalid');
   if (hasInvalid) return;
 
   const { lastElementChild } = errorText;
   lastElementChild.innerText = message;
   errorText.classList.remove('hidden');
-  numberInput.classList.add('invalid');
+  input.classList.add('invalid');
 }
 
-function removeValueAlerts(numberInput, errorText) {
-  numberInput = numberInput.target || numberInput;
-  const hasInvalid = numberInput.classList.contains('invalid');
+function removeValueAlerts(input, errorText) {
+  input = input.target || input;
+  const hasInvalid = input.classList.contains('invalid');
   if (!hasInvalid) return;
 
   errorText = errorText || reward.item.querySelector('[data-invalid-value]');
   errorText.classList.add('hidden');
-  numberInput.classList.remove('invalid');
+  input.classList.remove('invalid');
 }
 //# sourceMappingURL=main.js.map
