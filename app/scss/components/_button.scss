@@ -29,7 +29,7 @@
   &--bookmark {
     @extend .button;
     --button-width: 3.5rem;
-    --button-height: var(--button-width);
+    --button-height: 3.5rem;
     width: var(--button-width);
     height: var(--button-height);
     flex-shrink: 0;
@@ -37,6 +37,16 @@
     border-radius: 50%;
     overflow: hidden;
     transition: color var(--button-transition);
+
+    & * {
+      pointer-events: none;
+    }
+
+    @include breakpoint(medium) {
+      --button-width: auto;
+
+      border-radius: calc(var(--button-height) / 2);
+    }
 
     path,
     circle {
@@ -50,6 +60,9 @@
     }
 
     .button__text {
+      padding-inline: rem(16) rem(24);
+      font-weight: var(--font-weight-7);
+      color: var(--color-gray-5);
       transition: color var(--button-transition);
 
       @include breakpoint-down(medium) {

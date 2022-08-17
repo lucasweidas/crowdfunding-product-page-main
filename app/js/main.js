@@ -106,12 +106,15 @@ function setBookmarkData(value) {
 function setToggleBookmarkAttributes() {
   const { bookmarked } = getData();
   const button = document.querySelector('[data-button-bookmark]');
+  const textButton = button.querySelector('[data-text-button]');
 
   button.setAttribute('aria-pressed', bookmarked);
   if (bookmarked) {
     button.setAttribute('aria-label', 'Remove bookmark');
+    textButton.innerText = 'Bookmarked';
   } else {
     button.setAttribute('aria-label', 'Add bookmark');
+    textButton.innerText = 'Bookmark';
   }
 }
 
