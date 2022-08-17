@@ -12,6 +12,10 @@
   &--menu {
     @extend .button;
     background-color: transparent;
+
+    @include breakpoint(medium) {
+      display: none;
+    }
   }
 
   &--large {
