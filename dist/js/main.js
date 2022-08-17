@@ -11,13 +11,13 @@ const reward = {
   content: null,
   contentHeight: 0,
 };
-const observer = new ResizeObserver(verifyContentResize);
 const focusable = {
   firstFocusable: null,
   focusableContent: null,
   lastFocusable: null,
   previousFocused: null,
 };
+const observer = new ResizeObserver(verifyContentResize);
 
 // Initializer
 (() => {
@@ -72,9 +72,7 @@ function checkMainClick({ target }) {
 
 function checkMainChange({ target }) {
   if (target.hasAttribute('data-reward-radio')) {
-    // toggleTabindex(target);
-    rewardSelected(target);
-    return;
+    return rewardSelected(target);
   }
 }
 
@@ -93,7 +91,6 @@ function toggleMobileMenu() {
 // Bookmark Button
 function toggleBookmark() {
   const bookmarked = !getData().bookmarked;
-  const html = document.documentElement;
 
   setBookmarkData(bookmarked);
   html.dataset.bookmark = bookmarked;
@@ -121,6 +118,7 @@ function setToggleBookmarkAttributes() {
 // Selection Modal
 function openSelectionModal(button) {
   toggleActive(selectionModal);
+  document.body.classList.add('fixed');
   focusable.previousFocused = button;
   document.addEventListener('keydown', verifyKeyDown);
   setFocusable(selectionModal);
@@ -203,8 +201,10 @@ function setClosing(element) {
     'animationend',
     () => {
       element.classList.remove('closing');
-      isActive(successModal) || document.removeEventListener('keydown', verifyKeyDown);
       reward.item && resetSelectionModal();
+      if (isActive(successModal)) return;
+      document.body.classList.remove('fixed');
+      document.removeEventListener('keydown', verifyKeyDown);
     },
     { once: true }
   );
@@ -420,16 +420,12 @@ function removeFormInputsEvents() {
 }
 
 function verifySelectionFormEvents({ target, type }) {
-  // console.log('verify:', type);
   if (target.type !== 'text' || type !== 'input') return;
 
-  // console.log('valid:', type);
-  const filter = /^\d*(\.\d{0,2})?$/;
-  filterInputValue(target, filter) && removeValueAlerts(target);
+  filterInputValue(target, /^\d*(\.\d{0,2})?$/) && removeValueAlerts(target);
 }
 
 function formInputEvents({ target, type }) {
-  // console.log(evt);
   if (type === 'blur') {
     target.value = toCurrency(target.value);
     return;
@@ -468,12 +464,11 @@ function toCurrency(value) {
     minimumFractionDigits: minimum,
   }).format(Number(removeCommas(value)));
 
-  return /\.$/.test(value) ? `${formattedValue}.` : formattedValue;
-  // return formattedValue;
+  // return /\.$/.test(value) ? `${formattedValue}.` : formattedValue;
+  return formattedValue;
 }
 
 function removeCommas(value) {
-  // console.log(typeof value, value);
   return value.replace(/,/g, '');
 }
 
@@ -509,7 +504,7 @@ function validateInputValue(input, value) {
 
 function validateMinValue(input, value) {
   const { min } = input;
-  if (value >= min) return true;
+  if (Number(value) >= min) return true;
 
   const errorText = reward.item.querySelector('[data-invalid-value]');
   const message = `The minimum pledge for this reward is $${min}`;

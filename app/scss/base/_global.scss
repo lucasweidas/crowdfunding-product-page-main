@@ -29,6 +29,11 @@
 
 body {
   background-color: var(--color-white-8);
+
+  &.fixed {
+    height: 100vh !important;
+    overflow-y: hidden !important;
+  }
 }
 
 span {
