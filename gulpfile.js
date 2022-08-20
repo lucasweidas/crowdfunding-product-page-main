@@ -22,7 +22,7 @@ function jsTask() {
 
 // Image Task
 function imageTask() {
-  return src('app/images/**/*.{gif,jpg,png,svg,webp}', { sourcemaps: true }).pipe(dest('dist/images', { sourcemaps: '.' }));
+  return src('app/images/**/*.{gif,jpg,png,svg,webp}').pipe(dest('dist/images'));
 }
 
 // Browsersync

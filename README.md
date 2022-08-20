@@ -1,4 +1,4 @@
-# Frontend Mentor -
+# Frontend Mentor - Crowdfunding product page solution
 
 ## Welcome! 👋
 
@@ -15,16 +15,16 @@ Thanks for checking out this front-end coding challenge solution.
 
 ## Overview
 
-REMOVE
+This is a solution to the [Crowdfunding product page challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/crowdfunding-product-page-7uvcZe7ZR). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
 ### Preview Screenshot
 
-![Preview for the ](./preview/desktop-preview.png)
+![Preview for the Crowdfunding product page](./preview/desktop-preview.png)
 
 ### Links
 
-- Solution URL: [github.com/lucasweidas/](https://github.com/lucasweidas/)
-- Live Site URL: [lucasweidas.github.io//](https://lucasweidas.github.io//)
+- Solution URL: [github.com/lucasweidas/crowdfunding-product-page-main](https://github.com/lucasweidas/crowdfunding-product-page-main)
+- Live Site URL: [lucasweidas.github.io/crowdfunding-product-page-main/](https://lucasweidas.github.io/crowdfunding-product-page-main/)
 
 ## My process
 
@@ -36,6 +36,7 @@ REMOVE
 - CSS Flex
 - Mobile-first workflow
 - Pure JS
+- SASS-SCSS
 
 ## Author
 

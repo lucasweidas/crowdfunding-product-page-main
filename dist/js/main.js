@@ -335,7 +335,7 @@ function verifyForm(evt) {
 
   if (!validateInputValue(valueInput, value)) return;
   if (!validateMinValue(valueInput, value)) return;
-  console.log('Valid amount!');
+
   const data = getData();
   updateProjectData(data, value, item.dataset);
   setBannerElementsData(data);
@@ -400,7 +400,6 @@ function disableRewardCard(item, rewardItem) {
 }
 
 function setFormFilterEvents(form) {
-  // const events = ['input', 'keydown', 'keyup'];
   const events = ['input'];
 
   events.forEach(event => {
@@ -444,30 +443,26 @@ function filterInputValue(input, filter) {
     input.oldValue = input.value;
     input.oldSelectionStart = input.selectionStart;
     input.oldSelectionEnd = input.selectionEnd;
-    // console.log("1");
     return true;
   } else if (input.hasOwnProperty('oldValue')) {
     input.value = input.oldValue;
     input.setSelectionRange(input.oldSelectionStart, input.oldSelectionEnd);
-    // console.log("2");
     return false;
   } else {
     input.value = '';
-    // console.log("3");
     return false;
   }
 }
 
 function toCurrency(value) {
-  const regex = /^(?![\s\S])|^\.\d{0,2}?$/;
-  if (regex.test(value)) return value;
+  const filter = /^(?![\s\S])|^\.\d{0,2}?$/;
+  if (filter.test(value)) return value;
 
   const minimum = /\./.test(value) ? value.split('.')[1].length : 0;
   const formattedValue = Intl.NumberFormat('en-US', {
     minimumFractionDigits: minimum,
   }).format(Number(removeCommas(value)));
 
-  // return /\.$/.test(value) ? `${formattedValue}.` : formattedValue;
   return formattedValue;
 }
 
@@ -478,7 +473,6 @@ function removeCommas(value) {
 function calculateAmounts(raisedValue, inputValue) {
   raisedValue = getIntergerAndFractionalDigits(raisedValue);
   inputValue = getIntergerAndFractionalDigits(removeCommas(inputValue));
-  // console.log(raisedValue, inputValue);
 
   const integerTotal = raisedValue[0] + inputValue[0];
   const fractionalTotal = (raisedValue[1] * 100 + inputValue[1] * 100) / 100;
@@ -501,7 +495,6 @@ function validateInputValue(input, value) {
   const errorText = reward.item.querySelector('[data-invalid-value]');
   const message = `Enter a valid pledge`;
   addValueAlerts(input, errorText, message);
-  console.log('invalid pledge');
   return false;
 }
 
@@ -512,7 +505,6 @@ function validateMinValue(input, value) {
   const errorText = reward.item.querySelector('[data-invalid-value]');
   const message = `The minimum pledge for this reward is $${min}`;
   addValueAlerts(input, errorText, message);
-  console.log('invalid min');
   return false;
 }
 
