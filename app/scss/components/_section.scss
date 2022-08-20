@@ -81,10 +81,6 @@
     overflow-y: auto;
     padding-block-start: var(--section-padding-block-start);
 
-    @include breakpoint(medium) {
-      height: fit-content;
-    }
-
     #{$modal}.active & {
       animation: slide-down var(--animation-2);
 
