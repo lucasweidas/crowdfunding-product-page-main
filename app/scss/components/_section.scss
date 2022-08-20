@@ -16,6 +16,10 @@
   padding-inline: var(--section-padding-inline);
   padding-block-end: var(--section-padding-block-end);
 
+  @include breakpoint(medium) {
+    --section-padding-inline: clamp(2rem, 4vw, 2.875rem);
+  }
+
   &--intro {
     --section-padding-block-start: 3.25rem;
     @extend .section;
@@ -35,11 +39,10 @@
 
   &--stats {
     --section-padding-block-start: 2.25rem;
-    --section-row-gap: 0.5rem;
     @extend .section;
 
     align-items: center;
-    row-gap: var(--section-row-gap);
+    row-gap: rem(34);
     padding-block-start: var(--section-padding-block-start);
 
     #{$section}__bar {

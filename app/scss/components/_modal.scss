@@ -34,8 +34,10 @@
     overflow-y: scroll;
 
     .section {
+      max-width: rem(540);
       align-items: center;
       padding-block-start: 2rem;
+      text-align: center;
     }
 
     .heading--h2 {
