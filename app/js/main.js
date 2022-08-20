@@ -499,7 +499,7 @@ function validateInputValue(input, value) {
 }
 
 function validateMinValue(input, value) {
-  const { min } = input;
+  const { min } = input.dataset;
   if (Number(value) >= min) return true;
 
   const errorText = reward.item.querySelector('[data-invalid-value]');
