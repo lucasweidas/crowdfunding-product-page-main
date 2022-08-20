@@ -9,12 +9,19 @@
   &--header {
     --container-height: 18.75rem;
     --container-padding-block-start: 2rem;
+    --bg-image-url: url('../images/image-hero-mobile.jpg');
     @extend .container;
 
     justify-content: center;
     height: var(--container-height);
-    background: linear-gradient(to bottom, rgba(#000, 0.7), transparent 50%), url('../images/image-hero-mobile.jpg') center / cover no-repeat;
+    background: linear-gradient(to bottom, rgba(#000, 0.7), transparent 50%), var(--bg-image-url) center / cover no-repeat;
     padding-block-start: var(--container-padding-block-start);
+
+    @include breakpoint(large) {
+      --container-height: 25rem;
+      --container-padding-block-start: 3rem;
+      --bg-image-url: url('../images/image-hero-desktop.jpg');
+    }
   }
 
   &--main {
@@ -27,6 +34,10 @@
     row-gap: var(--container-row-gap);
     position: relative;
     top: var(--container-top);
+
+    @include breakpoint(large) {
+      --container-top: -5.75rem;
+    }
   }
 
   &--modal {

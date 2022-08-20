@@ -29,6 +29,7 @@
     @include breakpoint(medium) {
       flex-direction: row;
       justify-content: space-between;
+      align-items: flex-end;
     }
   }
 
@@ -65,19 +66,19 @@
       --wrapper-padding: 1.5rem 1.5rem 0;
 
       grid-template-areas:
-      'input'
-      'paragraph'
-      'stats'
-      'grow';
+        'input'
+        'paragraph'
+        'stats'
+        'grow';
 
       @include breakpoint(medium) {
-        --wrapper-padding: 2rem 2rem 0;
+        --wrapper-padding: 2rem 1.625rem 0;
 
         grid-template-areas:
-          'input stats'
-          'paragraph paragraph'
-          'grow grow';
-        grid-template-columns: 1fr auto;
+          'input input stats'
+          '. paragraph paragraph'
+          'grow grow grow';
+        grid-template-columns: 2.5rem 1fr auto;
       }
     }
 
@@ -86,6 +87,14 @@
         'input'
         'paragraph'
         'grow';
+
+      @include breakpoint(medium) {
+        grid-template-areas:
+          'input input'
+          '. paragraph'
+          'grow grow';
+        grid-template-columns: 2.5rem 1fr;
+      }
     }
 
     .reward__item.active & {
@@ -173,7 +182,7 @@
     transition: max-height var(--duration-2) ease-in-out;
 
     @include breakpoint(medium) {
-      --grow-width-plus: 4rem;
+      --grow-width-plus: 3.25rem;
     }
   }
 
@@ -185,6 +194,14 @@
     position: relative;
     padding: 0 calc(var(--grow-width-plus) / 2) calc(var(--grow-width-plus) / 2);
 
+    @include breakpoint(medium) {
+      width: 100%;
+      display: grid;
+      grid-template-areas: 'paragraph continue' 'invalid invalid';
+      justify-content: space-between;
+      padding-block-start: calc(var(--grow-width-plus) / 2);
+    }
+
     &::before {
       content: '';
       width: calc(100% + var(--grow-width-plus));
@@ -192,6 +209,12 @@
       position: absolute;
       top: 0;
       border-block-start: var(--border-1);
+    }
+
+    .paragraph:not(.invalid-value) {
+      @include breakpoint(medium) {
+        padding-block: 0;
+      }
     }
 
     .custom--number {
@@ -204,6 +227,14 @@
       position: relative;
       border-radius: calc(var(--input-height) / 2);
       font-weight: var(--font-weight-7);
+
+      @include breakpoint-down(small) {
+        --input-width: 100%;
+      }
+
+      @include breakpoint(medium) {
+        --input-width: 7.25rem;
+      }
 
       &::before {
         content: '$';
@@ -241,6 +272,7 @@
       padding-block: 1rem 0;
       color: var(--color-red);
       text-align: center;
+      grid-area: invalid;
 
       &.hidden {
         display: none;
@@ -254,7 +286,12 @@
 
   &--continue {
     @extend .wrapper;
+    grid-area: continue;
     justify-content: center;
     gap: 1rem;
+
+    @include breakpoint-down(small) {
+      flex-direction: column;
+    }
   }
 }

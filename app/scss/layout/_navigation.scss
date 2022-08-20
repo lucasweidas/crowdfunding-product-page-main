@@ -122,6 +122,10 @@
           transform: scaleX(1);
         }
       }
+
+      @include breakpoint(large) {
+        font-size: var(--font-size-1);
+      }
     }
   }
 

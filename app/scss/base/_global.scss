@@ -1,16 +1,5 @@
 @use '../abstracts/' as *;
 
-// REMOVE THIS LATER
-.design {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  opacity: 0.2;
-  pointer-events: none;
-}
-/////////////////////
-
 :root {
   --radius-1: 0.5rem;
   --border-0: 0.063rem solid var(--color-gray-1);
